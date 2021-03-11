@@ -89,7 +89,7 @@ paths:
                   lastName: Baker
                   dateOfBirth: '1985-10-02'
         description: Patch user properties to update.
-  /users:
+  /user:
     post:
       summary: Create New User
       operationId: post-user
