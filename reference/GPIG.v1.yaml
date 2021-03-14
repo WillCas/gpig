@@ -2,9 +2,63 @@ openapi: 3.0.0
 info:
   title: GPIG
   version: '1.0'
+  contact:
+    name: William Castle
+    email: willcas1@hotmail.com
 servers:
   - url: 'http://localhost:3000'
+    description: ''
 paths:
+  /actions:
+    get:
+      summary: Get Actions
+      tags: []
+      responses:
+        '200':
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '425':
+          description: Too Early
+      operationId: get-actions
+          '':
+            type: array
+            description: The action(s) you want to get information on
+            items:
+              type: object
+          application/json:
+            schema:
+              type: object
+              properties: {}
+        description: In the body we specify an array of string that define the actions you want to find information about
+      description: This endpoint allows you to get information about an action(s)
+    parameters: []
+    post:
+      summary: ''
+      operationId: post-actions
+          actions:
+            type: array
+            description: The action(s) you want to create or update
+            items:
+              type: object
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '425':
+          description: Too Early
+      description: This endpoint allows you to create or update an action(s)
   /info/totals:
     post:
       summary: Totals
@@ -275,45 +329,90 @@ paths:
     parameters: []
 components:
   schemas:
-    User:
-      title: User
+    Vaccine:
+      title: Vaccine
       type: object
-      description: ''
-      x-examples:
-        Alice Smith:
-          id: 142
-          firstName: Alice
-          lastName: Smith
-          email: alice.smith@gmail.com
-          dateOfBirth: '1997-10-31'
-          emailVerified: true
-          signUpDate: '2019-08-24'
+      description: 'Work towards producing a vaccine for the contagion. A vaccine is produced once US$80 million has been invested in the production of a vaccine, at this point further investment will lead to subsequent vaccines being produced via the same process. The produced vaccine will be as described in section 8 of the GPIG Cross-Team Competition Rules.'
       properties:
         id:
+          type: string
+          description: The unique identifier for this action
+        amount_invested:
           type: integer
-          description: Unique identifier for the given user.
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-          format: email
-        dateOfBirth:
-          type: string
-          format: date
-          example: '1997-10-31'
-        emailVerified:
-          type: boolean
-          description: Set to true if the user's email has been verified.
-        createDate:
-          type: string
-          format: date
-          description: The date that the user was created.
+          description: The amount of money invested in this action in dollars
+        cost:
+          type: integer
+          description: The cost of the action
       required:
         - id
-        - firstName
-        - lastName
-        - email
-        - emailVerified
+    Furlough:
+      title: Furlough
+      type: object
+      description: |
+        Provide monetary support to those who are not able to work due to the contagion, propping up businesses that are not viable during the pandemic.
+
+        - Reduces the number of people going to work
+        - Higher amount results in higher budget cost
+        - If used in combination with action 2 or 4, that action’s GDP cost is reduced
+      properties:
+        id:
+          type: string
+          description: The unique identifier for this action
+        amount_invested:
+          type: integer
+          description: Amount invested (n money) per working person in dollars
+        location:
+          type: array
+          description: The grid sqaure(s) that have been selected for this action
+          items:
+            type: integer
+        active:
+          type: boolean
+          description: Is the action running or cancelled
+      required:
+        - id
+    Information-Press-Releases:
+      title: Information-Press-Releases
+      type: object
+      description: |-
+        Press-releases to improve morale/disseminate information, which could have a negative effect if it goes wrong and are produced every set unit of time.
+
+        - Increase awareness
+        - Probably increase public opinion
+        - Implementation can change the amount this increases (minimum of 0 increase)
+        - Implementation can alter how much the improvement is based on number of previous press releases
+      properties:
+        id:
+          type: string
+          description: The unique identifier for this action
+        amount_invested:
+          type: integer
+          description: The amount this action costs in dollars
+        location:
+          type: array
+          description: The locations on the grid square(s) that this action is taking place
+          items:
+            type: integer
+        cost:
+          type: integer
+          description: The amount it costs per person in dollars
+      required:
+        - id
+    Loan:
+      title: Loan
+      type: object
+      description: |
+        Action to allow the WHO to take additional Budget for situations in which they run out of money. Negative effects of taking a loan are considered too long term or otherwise out of scope
+
+        - Reduction in Score
+        - Increase in Budget for the following turn (Lump sum)
+      properties:
+        id:
+          type: string
+          description: The unique indentifier for this action
+        amount_loaned:
+          type: integer
+          description: The amount of money loaned to WHO in dollars so far
+      required:
+        - id
   securitySchemes: {}
