@@ -7,7 +7,7 @@ servers:
 paths:
   /info/totals:
     post:
-      summary: ''
+      summary: Totals
       operationId: post-info-actors
       responses:
         '200':
@@ -65,7 +65,7 @@ paths:
     parameters: []
   /info/actors:
     post:
-      summary: ''
+      summary: Actor IDs
       operationId: post-info-actors-ids
       responses:
         '200':
@@ -111,7 +111,7 @@ paths:
     parameters: []
   /info/homes:
     post:
-      summary: ''
+      summary: Actor Homes
       operationId: post-info-actors-homes
       responses:
         '200':
@@ -157,7 +157,7 @@ paths:
     parameters: []
   /info/id:
     post:
-      summary: ''
+      summary: Actor Information
       operationId: post-info-actors-id
       responses:
         '200':
@@ -219,7 +219,7 @@ paths:
     parameters: []
   /status:
     get:
-      summary: Your GET endpoint
+      summary: Simulation Status
       tags: []
       responses:
         '200':
@@ -246,7 +246,7 @@ paths:
     parameters: []
   /settings:
     get:
-      summary: ''
+      summary: Simulation Settings
       operationId: post-settings
       responses:
         '200':
