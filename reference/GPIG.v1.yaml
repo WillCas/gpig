@@ -5,7 +5,7 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  /info/actors/total:
+  /info/totals:
     post:
       summary: ''
       operationId: post-info-actors
@@ -29,7 +29,15 @@ paths:
                     type: integer
                   recovered:
                     type: integer
-              examples: {}
+              examples:
+                example:
+                  value:
+                    uninfected: 800000
+                    asymp-not-infections: 50000
+                    infections: 50000
+                    serious-infections: 50000
+                    dead: 25000
+                    recovered: 25000
         '404':
           description: Not Found
         '418':
@@ -47,10 +55,15 @@ paths:
                     type: string
               required:
                 - location
-            examples: {}
+            examples:
+              example:
+                value:
+                  location:
+                    - A1
+                    - B3
       description: Request for the total number of people in a grid location.
     parameters: []
-  /info/actors/all:
+  /info/actors:
     post:
       summary: ''
       operationId: post-info-actors-ids
@@ -66,6 +79,12 @@ paths:
                     type: array
                     items:
                       type: integer
+              examples:
+                example:
+                  value:
+                    actors:
+                      - 1234
+                      - 5678
         '404':
           description: Not Found
         '418':
@@ -83,9 +102,14 @@ paths:
                     type: string
               required:
                 - location
+            examples:
+              example:
+                value:
+                  location:
+                    - A0
       description: Request for the IDs of actors that are currently in a grid location (not including those in the dead state).
     parameters: []
-  /info/actors/homes:
+  /info/homes:
     post:
       summary: ''
       operationId: post-info-actors-homes
@@ -101,6 +125,13 @@ paths:
                     type: array
                     items:
                       type: integer
+              examples:
+                example-1:
+                  value:
+                    actors:
+                      - 5678
+                      - 1234
+                      - 5556
         '404':
           description: Not Found
         '418':
@@ -118,9 +149,13 @@ paths:
                     type: string
               required:
                 - location
+            examples:
+              example:
+                value:
+                  location: []
       description: Request for the IDs of actors who have homes in a grid location (including those in the dead state).
     parameters: []
-  /info/actors/id:
+  /info/id:
     post:
       summary: ''
       operationId: post-info-actors-id
@@ -134,6 +169,13 @@ paths:
                 properties:
                   state:
                     type: string
+                    enum:
+                      - uninfected
+                      - asymp-not-infections
+                      - infections
+                      - serious-infections
+                      - dead
+                      - recovered
                   location:
                     type: array
                     items:
@@ -146,6 +188,17 @@ paths:
                     type: integer
                   vulnerable:
                     type: boolean
+              examples:
+                example:
+                  value:
+                    state: string
+                    location:
+                      - dead
+                    home:
+                      - A1
+                      - B3
+                    age: 69
+                    vulnerable: false
         '404':
           description: Not Found
       requestBody:
@@ -158,6 +211,10 @@ paths:
                   type: integer
               required:
                 - actor
+            examples:
+              example:
+                value:
+                  actor: 12345
       description: Request for the current state of an actor.
     parameters: []
   /status:
@@ -176,41 +233,45 @@ paths:
                     type: boolean
                   current-turn:
                     type: integer
-                  bidget:
+                  budget:
                     type: integer
+              examples:
+                example:
+                  value:
+                    health-org-turn: true
+                    current-turn: 0
+                    budget: 1000
       operationId: get-status
       description: Request for the current simulation status.
     parameters: []
   /settings:
-    post:
+    get:
       summary: ''
       operationId: post-settings
       responses:
         '200':
           description: OK
-        '403':
-          description: Forbidden
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                unit:
-                  type: string
-                  enum:
-                    - seconds
-                    - minutes
-                    - hours
-                    - days
-                count:
-                  type: integer
-                  minimum: 1
-              required:
-                - unit
-                - count
-            examples: {}
-      description: Request to modify the current game settings.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unit:
+                    type: string
+                    enum:
+                      - seconds
+                      - minutes
+                      - hours
+                      - days
+                  count:
+                    type: integer
+                    minimum: 1
+              examples:
+                example:
+                  value:
+                    unit: seconds
+                    count: 100
+      description: Request the current game settings.
     parameters: []
 components:
   schemas:
