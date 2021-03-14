@@ -435,6 +435,83 @@
         "description": "Request the current game settings."
       },
       "parameters": []
+    },
+    "/actions": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "425": {
+            "description": "Too Early"
+          }
+        },
+        "operationId": "get-actions",
+        "description": "The action(s) you want to get information on",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "description": "The actions you want information on",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "description": ""
+        }
+      },
+      "post": {
+        "summary": "",
+        "operationId": "post-actions",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "425": {
+            "description": "Too Early"
+          }
+        },
+        "description": "The action(s) you want to create or update",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "description": "The actions you want to create or update",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
