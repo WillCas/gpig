@@ -5,7 +5,9 @@ info:
   contact:
     name: William Castle
     email: willcas1@hotmail.com
-servers: []
+servers:
+  - url: 'http://localhost:3000'
+    description: ''
 paths:
   /actions:
     get:
