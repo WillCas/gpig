@@ -5,144 +5,212 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  '/users/{userId}':
-    parameters:
-      - schema:
-          type: integer
-        name: userId
-        in: path
-        required: true
-        description: Id of an existing user.
+  /info/actors/total:
+    post:
+      summary: ''
+      operationId: post-info-actors
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uninfected:
+                    type: integer
+                  asymp-not-infections:
+                    type: integer
+                  infections:
+                    type: integer
+                  serious-infections:
+                    type: integer
+                  dead:
+                    type: integer
+                  recovered:
+                    type: integer
+              examples: {}
+        '404':
+          description: Not Found
+        '418':
+          description: I'm a teapot (RFC 2324)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                location:
+                  type: array
+                  minItems: 0
+                  items:
+                    type: string
+              required:
+                - location
+            examples: {}
+      description: Request for the total number of people in a grid location.
+    parameters: []
+  /info/actors/all:
+    post:
+      summary: ''
+      operationId: post-info-actors-ids
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  actors:
+                    type: array
+                    items:
+                      type: integer
+        '404':
+          description: Not Found
+        '418':
+          description: I'm a teapot (RFC 2324)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                location:
+                  type: array
+                  minItems: 0
+                  items:
+                    type: string
+              required:
+                - location
+      description: Request for the IDs of actors that are currently in a grid location (not including those in the dead state).
+    parameters: []
+  /info/actors/homes:
+    post:
+      summary: ''
+      operationId: post-info-actors-homes
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  actors:
+                    type: array
+                    items:
+                      type: integer
+        '404':
+          description: Not Found
+        '418':
+          description: I'm a teapot (RFC 2324)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                location:
+                  type: array
+                  minItems: 0
+                  items:
+                    type: string
+              required:
+                - location
+      description: Request for the IDs of actors who have homes in a grid location (including those in the dead state).
+    parameters: []
+  /info/actors/id:
+    post:
+      summary: ''
+      operationId: post-info-actors-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: string
+                  location:
+                    type: array
+                    items:
+                      type: string
+                  home:
+                    type: array
+                    items:
+                      type: string
+                  age:
+                    type: integer
+                  vulnerable:
+                    type: boolean
+        '404':
+          description: Not Found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                actor:
+                  type: integer
+              required:
+                - actor
+      description: Request for the current state of an actor.
+    parameters: []
+  /status:
     get:
-      summary: Get User Info by User ID
+      summary: Your GET endpoint
       tags: []
       responses:
         '200':
-          description: User Found
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-              examples:
-                Get User Alice Smith:
-                  value:
-                    id: 142
-                    firstName: Alice
-                    lastName: Smith
-                    email: alice.smith@gmail.com
-                    dateOfBirth: '1997-10-31'
-                    emailVerified: true
-                    signUpDate: '2019-08-24'
-        '404':
-          description: User Not Found
-      operationId: get-users-userId
-      description: Retrieve the information of the user with the matching user ID.
-    patch:
-      summary: Update User Information
-      operationId: patch-users-userId
-      responses:
-        '200':
-          description: User Updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-              examples:
-                Updated User Rebecca Baker:
-                  value:
-                    id: 13
-                    firstName: Rebecca
-                    lastName: Baker
-                    email: rebecca@gmail.com
-                    dateOfBirth: '1985-10-02'
-                    emailVerified: false
-                    createDate: '2019-08-24'
-        '404':
-          description: User Not Found
-        '409':
-          description: Email Already Taken
-      description: Update the infromation of an existing user.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                email:
-                  type: string
-                  description: 'If a new email is given, the user''s email verified property will be set to false.'
-                dateOfBirth:
-                  type: string
-            examples:
-              Update First Name:
-                value:
-                  firstName: Rebecca
-              Update Email:
-                value:
-                  email: rebecca@gmail.com
-              Update Last Name & Date of Birth:
-                value:
-                  lastName: Baker
-                  dateOfBirth: '1985-10-02'
-        description: Patch user properties to update.
-  /user:
+                type: object
+                properties:
+                  health-org-turn:
+                    type: boolean
+                  current-turn:
+                    type: integer
+                  bidget:
+                    type: integer
+      operationId: get-status
+      description: Request for the current simulation status.
+    parameters: []
+  /settings:
     post:
-      summary: Create New User
-      operationId: post-user
+      summary: ''
+      operationId: post-settings
       responses:
         '200':
-          description: User Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-              examples:
-                New User Bob Fellow:
-                  value:
-                    id: 12
-                    firstName: Bob
-                    lastName: Fellow
-                    email: bob.fellow@gmail.com
-                    dateOfBirth: '1996-08-24'
-                    emailVerified: false
-                    createDate: '2020-11-18'
-        '400':
-          description: Missing Required Information
-        '409':
-          description: Email Already Taken
+          description: OK
+        '403':
+          description: Forbidden
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                firstName:
+                unit:
                   type: string
-                lastName:
-                  type: string
-                email:
-                  type: string
-                dateOfBirth:
-                  type: string
-                  format: date
+                  enum:
+                    - seconds
+                    - minutes
+                    - hours
+                    - days
+                count:
+                  type: integer
+                  minimum: 1
               required:
-                - firstName
-                - lastName
-                - email
-                - dateOfBirth
-            examples:
-              Create User Bob Fellow:
-                value:
-                  firstName: Bob
-                  lastName: Fellow
-                  email: bob.fellow@gmail.com
-                  dateOfBirth: '1996-08-24'
-        description: Post the necessary fields for the API to create a new user.
-      description: Create a new user.
+                - unit
+                - count
+            examples: {}
+      description: Request to modify the current game settings.
     parameters: []
 components:
   schemas:
@@ -187,3 +255,4 @@ components:
         - lastName
         - email
         - emailVerified
+  securitySchemes: {}
