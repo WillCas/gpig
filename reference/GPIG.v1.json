@@ -1,0 +1,543 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GPIG",
+    "description": "GPIG API",
+    "version": "1.0",
+    "contact": {
+      "name": "William Castle",
+      "email": "willcas1@hotmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": ""
+    }
+  ],
+  "tags": [],
+  "paths": {
+    "/info/totals": {
+      "post": {
+        "tags": [],
+        "summary": "Totals",
+        "operationId": "post-info-actors",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "uninfected": {
+                      "type": "integer"
+                    },
+                    "asymp-not-infections": {
+                      "type": "integer"
+                    },
+                    "infections": {
+                      "type": "integer"
+                    },
+                    "serious-infections": {
+                      "type": "integer"
+                    },
+                    "dead": {
+                      "type": "integer"
+                    },
+                    "recovered": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "uninfected": 800000,
+                      "asymp-not-infections": 50000,
+                      "infections": 50000,
+                      "serious-infections": 50000,
+                      "dead": 25000,
+                      "recovered": 25000
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "418": {
+            "description": "I'm a teapot (RFC 2324)"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "location": {
+                    "type": "array",
+                    "minItems": 0,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "location"
+                ]
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "location": [
+                      "A1",
+                      "B3"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Request for the total number of people in a grid location."
+      },
+      "parameters": []
+    },
+    "/info/actors": {
+      "post": {
+        "tags": [],
+        "summary": "Actor IDs",
+        "operationId": "post-info-actors-ids",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "actors": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "actors": [
+                        1234,
+                        5678
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "418": {
+            "description": "I'm a teapot (RFC 2324)"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "location": {
+                    "type": "array",
+                    "minItems": 0,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "location"
+                ]
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "location": [
+                      "A0"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Request for the IDs of actors that are currently in a grid location (not including those in the dead state)."
+      },
+      "parameters": []
+    },
+    "/info/homes": {
+      "post": {
+        "tags": [],
+        "summary": "Actor Homes",
+        "operationId": "post-info-actors-homes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "actors": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "actors": [
+                        5678,
+                        1234,
+                        5556
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "418": {
+            "description": "I'm a teapot (RFC 2324)"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "location": {
+                    "type": "array",
+                    "minItems": 0,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "location"
+                ]
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "location": []
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Request for the IDs of actors who have homes in a grid location (including those in the dead state)."
+      },
+      "parameters": []
+    },
+    "/info/id": {
+      "post": {
+        "tags": [],
+        "summary": "Actor Information",
+        "operationId": "post-info-actors-id",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "state": {
+                      "type": "string",
+                      "enum": [
+                        "uninfected",
+                        "asymp-not-infections",
+                        "infections",
+                        "serious-infections",
+                        "dead",
+                        "recovered"
+                      ]
+                    },
+                    "location": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "home": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "age": {
+                      "type": "integer"
+                    },
+                    "vulnerable": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "state": "string",
+                      "location": [
+                        "dead"
+                      ],
+                      "home": [
+                        "A1",
+                        "B3"
+                      ],
+                      "age": 69,
+                      "vulnerable": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "actor": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "actor"
+                ]
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "actor": 12345
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Request for the current state of an actor."
+      },
+      "parameters": []
+    },
+    "/status": {
+      "get": {
+        "summary": "Simulation Status",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "health-org-turn": {
+                      "type": "boolean"
+                    },
+                    "current-turn": {
+                      "type": "integer"
+                    },
+                    "budget": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "health-org-turn": true,
+                      "current-turn": 0,
+                      "budget": 1000
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-status",
+        "description": "Request for the current simulation status."
+      },
+      "parameters": []
+    },
+    "/settings": {
+      "get": {
+        "tags": [],
+        "summary": "Simulation Settings",
+        "operationId": "post-settings",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "unit": {
+                      "type": "string",
+                      "enum": [
+                        "seconds",
+                        "minutes",
+                        "hours",
+                        "days"
+                      ]
+                    },
+                    "count": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "unit": "seconds",
+                      "count": 100
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Request the current game settings."
+      },
+      "parameters": []
+    }
+  },
+  "components": {
+    "schemas": {
+      "Vaccine": {
+        "title": "Vaccine",
+        "type": "object",
+        "description": "Work towards producing a vaccine for the contagion. A vaccine is produced once US$80 million has been invested in the production of a vaccine, at this point further investment will lead to subsequent vaccines being produced via the same process. The produced vaccine will be as described in section 8 of the GPIG Cross-Team Competition Rules.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for this action"
+          },
+          "amount_invested": {
+            "type": "integer",
+            "description": "The amount of money invested in this action in dollars"
+          },
+          "cost": {
+            "type": "integer",
+            "description": "The cost of the action"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "Furlough": {
+        "title": "Furlough",
+        "type": "object",
+        "description": "Provide monetary support to those who are not able to work due to the contagion, propping up businesses that are not viable during the pandemic.\n\n- Reduces the number of people going to work\n- Higher amount results in higher budget cost\n- If used in combination with action 2 or 4, that action’s GDP cost is reduced\n",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for this action"
+          },
+          "amount_invested": {
+            "type": "integer",
+            "description": "Amount invested (n money) per working person in dollars"
+          },
+          "location": {
+            "type": "array",
+            "description": "The grid sqaure(s) that have been selected for this action",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Is the action running or cancelled"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "Information-Press-Releases": {
+        "title": "Information-Press-Releases",
+        "type": "object",
+        "description": "Press-releases to improve morale/disseminate information, which could have a negative effect if it goes wrong and are produced every set unit of time.\n\n- Increase awareness\n- Probably increase public opinion\n- Implementation can change the amount this increases (minimum of 0 increase)\n- Implementation can alter how much the improvement is based on number of previous press releases",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for this action"
+          },
+          "amount_invested": {
+            "type": "integer",
+            "description": "The amount this action costs in dollars"
+          },
+          "location": {
+            "type": "array",
+            "description": "The locations on the grid square(s) that this action is taking place",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "cost": {
+            "type": "integer",
+            "description": "The amount it costs per person in dollars"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "Loan": {
+        "title": "Loan",
+        "type": "object",
+        "description": "Action to allow the WHO to take additional Budget for situations in which they run out of money. Negative effects of taking a loan are considered too long term or otherwise out of scope\n\n- Reduction in Score\n- Increase in Budget for the following turn (Lump sum)\n",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique indentifier for this action"
+          },
+          "amount_loaned": {
+            "type": "integer",
+            "description": "The amount of money loaned to WHO in dollars so far"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    },
+    "securitySchemes": {}
+  }
+}
