@@ -40,11 +40,7 @@
                 "type": "object",
                 "properties": {
                   "location": {
-                    "type": "array",
-                    "minItems": 0,
-                    "items": {
-                      "$ref": "#/components/schemas/Area"
-                    }
+                    "$ref": "#/components/schemas/LocationCoords"
                   }
                 },
                 "required": [
@@ -116,11 +112,7 @@
                 "type": "object",
                 "properties": {
                   "location": {
-                    "type": "array",
-                    "minItems": 0,
-                    "items": {
-                      "$ref": "#/components/schemas/Area"
-                    }
+                    "$ref": "#/components/schemas/LocationCoords"
                   }
                 },
                 "required": [
@@ -195,7 +187,7 @@
                     "type": "array",
                     "minItems": 0,
                     "items": {
-                      "$ref": "#/components/schemas/Area"
+                      "$ref": "#/components/schemas/LocationCoords"
                     }
                   }
                 },
@@ -217,102 +209,27 @@
       },
       "parameters": []
     },
-    "/info/id": {
-      "post": {
-        "tags": [],
-        "summary": "Actor Information",
-        "operationId": "post-info-actors-id",
+    "/info/actor/{id}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "integer"
+          },
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "",
+        "operationId": "get-info-actor-id",
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "state": {
-                      "type": "string",
-                      "enum": [
-                        "uninfected",
-                        "asymp-not-infections",
-                        "infections",
-                        "serious-infections",
-                        "dead",
-                        "recovered"
-                      ]
-                    },
-                    "location": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "home": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "age": {
-                      "type": "integer"
-                    },
-                    "vulnerable": {
-                      "type": "boolean"
-                    }
-                  }
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "state": "string",
-                      "location": [
-                        "dead"
-                      ],
-                      "home": [
-                        "A1",
-                        "B3"
-                      ],
-                      "age": 69,
-                      "vulnerable": false
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "actor": {
-                    "type": "integer",
-                    "format": "int32",
-                    "minimum": 0
-                  }
-                },
-                "required": [
-                  "actor"
-                ]
-              },
-              "examples": {
-                "example": {
-                  "value": {
-                    "actor": 12345
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/Actor"
           }
         },
         "description": "Request for the current state of an actor."
-      },
-      "parameters": []
+      }
     },
     "/status": {
       "get": {
@@ -727,10 +644,7 @@
             "default": false
           },
           "ageThreshold": {
-            "type": [
-              "integer",
-              "null"
-            ],
+            "type": "integer",
             "format": "int32"
           }
         },
@@ -938,6 +852,54 @@
                 "seriousInfection",
                 "dead",
                 "recoveredImmune"
+              ]
+            }
+          }
+        }
+      },
+      "Actor": {
+        "description": "Example response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "uninfected",
+                    "asymptomaticInfectedNotInfectious",
+                    "asymptomaticInfectedInfectious",
+                    "symptomatic",
+                    "seriousInfection",
+                    "dead",
+                    "recoveredImmune"
+                  ]
+                },
+                "location": {
+                  "$ref": "#/components/schemas/LocationCoords"
+                },
+                "home": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "age": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 0
+                },
+                "vulnerable": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "state",
+                "location",
+                "home",
+                "age",
+                "vulnerable"
               ]
             }
           }
