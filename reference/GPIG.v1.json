@@ -517,8 +517,8 @@
   },
   "components": {
     "schemas": {
-      "Vaccine": {
-        "title": "Vaccine",
+      "InvestVaccineParameters": {
+        "title": "InvestVaccineParameters",
         "type": "object",
         "description": "The parameters to the `investInVaccine` action.\n\nWork towards producing a vaccine for the contagion. A vaccine is produced once US$80 million has been invested in the production of a vaccine, at this point further investment will lead to subsequent vaccines being produced via the same process. The produced vaccine will be as described in section 8 of the GPIG Cross-Team Competition Rules.",
         "properties": {
@@ -532,8 +532,8 @@
           }
         }
       },
-      "Furlough": {
-        "title": "Furlough",
+      "FurloughParameters": {
+        "title": "FurloughParameters",
         "type": "object",
         "description": "The parameters to the `furlough` action.\n\nProvide monetary support to those who are not able to work due to the contagion, propping up businesses that are not viable during the pandemic.\n\n- Reduces the number of people going to work\n- Higher amount results in higher budget cost\n- If used in combination with action 2 or 4, that action’s GDP cost is reduced\n",
         "properties": {
@@ -554,8 +554,8 @@
           }
         }
       },
-      "InformationPressReleases": {
-        "title": "InformationPressReleases",
+      "InformationPressReleaseParameters": {
+        "title": "InformationPressReleaseParameters",
         "type": "object",
         "description": "The parameters to the `infoPressRelease` action.\n\nPress-releases to improve morale/disseminate information, which could have a negative effect if it goes wrong and are produced every set unit of time.\n\n- Increase awareness\n- Probably increase public opinion\n- Implementation can change the amount this increases (minimum of 0 increase)\n- Implementation can alter how much the improvement is based on number of previous press releases",
         "properties": {
@@ -583,8 +583,8 @@
           "id"
         ]
       },
-      "Loan": {
-        "title": "Loan",
+      "LoanParameters": {
+        "title": "LoanParameters",
         "type": "object",
         "description": "The parameters to the `loan` action.\n\nAction to allow the WHO to take additional Budget for situations in which they run out of money. Negative effects of taking a loan are considered too long term or otherwise out of scope\n\n- Reduction in Score\n- Increase in Budget for the following turn (Lump sum)\n",
         "properties": {
@@ -635,35 +635,35 @@
           "parameters": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/TestAndIsolation"
+                "$ref": "#/components/schemas/TestAndIsolationParameters"
               },
               {
-                "$ref": "#/components/schemas/StayAtHome"
+                "$ref": "#/components/schemas/StayAtHomeParameters"
               },
               {
-                "$ref": "#/components/schemas/CloseSchools"
+                "$ref": "#/components/schemas/CloseSchoolsParameters"
               },
               {
-                "$ref": "#/components/schemas/CloseRecreationalLocations"
+                "$ref": "#/components/schemas/CloseRecreationalLocationsParameters"
               },
               {
-                "$ref": "#/components/schemas/Vaccine"
+                "$ref": "#/components/schemas/InvestVaccineParameters"
               },
               {
-                "$ref": "#/components/schemas/Furlough"
+                "$ref": "#/components/schemas/FurloughParameters"
               },
               {
-                "$ref": "#/components/schemas/InformationPressReleases"
+                "$ref": "#/components/schemas/InformationPressReleasesParameters"
               },
               {
-                "$ref": "#/components/schemas/Loan"
+                "$ref": "#/components/schemas/LoanParameters"
               }
             ]
           }
         }
       },
-      "TestAndIsolation": {
-        "title": "TestAndIsolation",
+      "TestAndIsolationParameters": {
+        "title": "TestAndIsolationParameters",
         "type": "object",
         "description": "The parameters for the `testAndIsolation` action.",
         "properties": {
@@ -700,8 +700,8 @@
           "type": "string"
         }
       },
-      "StayAtHome": {
-        "title": "StayAtHome",
+      "StayAtHomeParameters": {
+        "title": "StayAtHomeParameters",
         "type": "object",
         "description": "The parameters for the `stayAtHome` action.",
         "properties": {
@@ -710,8 +710,8 @@
           }
         }
       },
-      "CloseSchools": {
-        "title": "CloseSchools",
+      "CloseSchoolsParameters": {
+        "title": "CloseSchoolsParameters",
         "type": "object",
         "description": "The parameters for the `closeSchools` action.",
         "properties": {
@@ -720,8 +720,8 @@
           }
         }
       },
-      "CloseRecreationalLocations": {
-        "title": "CloseRecreationalLocations",
+      "CloseRecreationalLocationsParameters": {
+        "title": "CloseRecreationalLocationsParameters",
         "type": "object",
         "properties": {
           "location": {
