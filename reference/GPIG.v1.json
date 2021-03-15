@@ -20,7 +20,7 @@
     "/info/totals": {
       "post": {
         "tags": [],
-        "summary": "Totals",
+        "summary": "Get state totals within a location",
         "operationId": "post-info-actors",
         "responses": {
           "200": {
@@ -67,7 +67,7 @@
     "/info/actors": {
       "post": {
         "tags": [],
-        "summary": "Actor IDs",
+        "summary": "Get all Actor IDs in a location",
         "operationId": "post-info-actors-ids",
         "responses": {
           "200": {
@@ -138,7 +138,7 @@
     "/info/homes": {
       "post": {
         "tags": [],
-        "summary": "Actor Homes",
+        "summary": "Get actors who have home in location",
         "operationId": "post-info-actors-homes",
         "responses": {
           "200": {
@@ -209,7 +209,7 @@
       },
       "parameters": []
     },
-    "/info/actor/{id}": {
+    "/info/actors/{id}": {
       "parameters": [
         {
           "schema": {
@@ -221,7 +221,7 @@
         }
       ],
       "get": {
-        "summary": "",
+        "summary": "Get actor by ID",
         "operationId": "get-info-actor-id",
         "responses": {
           "200": {
@@ -233,7 +233,7 @@
     },
     "/status": {
       "get": {
-        "summary": "Simulation Status",
+        "summary": "Get simulation status",
         "tags": [],
         "responses": {
           "200": {
@@ -275,7 +275,7 @@
     "/settings": {
       "get": {
         "tags": [],
-        "summary": "Simulation Settings",
+        "summary": "Get simulation settings",
         "operationId": "post-settings",
         "responses": {
           "200": {
@@ -318,7 +318,7 @@
     },
     "/actions": {
       "post": {
-        "summary": "Adjust Actions",
+        "summary": "Adjust actions in batch",
         "operationId": "post-actions",
         "responses": {
           "200": {
@@ -368,7 +368,7 @@
   "components": {
     "schemas": {
       "InvestInVaccineParameters": {
-        "title": "InvestInVaccineParameters",
+        "title": "Invest In Vaccine Parameters",
         "type": "object",
         "description": "The parameters to the `investInVaccine` action.\n\nWork towards producing a vaccine for the contagion. A vaccine is produced once US$80 million has been invested in the production of a vaccine, at this point further investment will lead to subsequent vaccines being produced via the same process. The produced vaccine will be as described in section 8 of the GPIG Cross-Team Competition Rules.",
         "properties": {
@@ -382,7 +382,7 @@
         ]
       },
       "FurloughParameters": {
-        "title": "FurloughParameters",
+        "title": "Furlough Parameters",
         "type": "object",
         "description": "The parameters to the `furlough` action.\n\nProvide monetary support to those who are not able to work due to the contagion, propping up businesses that are not viable during the pandemic.\n\n- Reduces the number of people going to work\n- Higher amount results in higher budget cost\n- If used in combination with action 2 or 4, that action’s GDP cost is reduced\n",
         "properties": {
@@ -400,7 +400,7 @@
         ]
       },
       "InformationPressReleaseParameters": {
-        "title": "InformationPressReleaseParameters",
+        "title": "Information Press Release Parameters",
         "type": "object",
         "description": "The parameters to the `infoPressRelease` action.\n\nPress-releases to improve morale/disseminate information, which could have a negative effect if it goes wrong and are produced every set unit of time.\n\n- Increase awareness\n- Probably increase public opinion\n- Implementation can change the amount this increases (minimum of 0 increase)\n- Implementation can alter how much the improvement is based on number of previous press releases",
         "properties": {
@@ -418,7 +418,7 @@
         ]
       },
       "LoanParameters": {
-        "title": "LoanParameters",
+        "title": "Loan Parameters",
         "type": "object",
         "description": "The parameters to the `loan` action.\n\nAction to allow the WHO to take additional Budget for situations in which they run out of money. Negative effects of taking a loan are considered too long term or otherwise out of scope\n\n- Reduction in Score\n- Increase in Budget for the following turn (Lump sum)\n",
         "properties": {
@@ -529,9 +529,9 @@
         ]
       },
       "TestAndIsolationParameters": {
-        "title": "TestAndIsolationParameters",
+        "title": "Test And Isolation Parameters",
         "type": "object",
-        "description": "The parameters for the `testAndIsolation` action.",
+        "description": "The parameters for the `testAndIsolation` action.\n\nAction: Starts a test-and-isolation program in an area using the given budget that will test symptomatic people or any person who requests, and any who return positive are automatically recommended to self-isolate.",
         "properties": {
           "testType": {
             "type": "string",
@@ -574,9 +574,9 @@
         }
       },
       "StayAtHomeParameters": {
-        "title": "StayAtHomeParameters",
+        "title": "Stay At Home Parameters",
         "type": "object",
-        "description": "The parameters for the `stayAtHome` action.",
+        "description": "The parameters for the `stayAtHome` action.\n\nAction: Begin a stay-at-home order for the given location that prevents people from leaving their residence except for necessary reasons (exercise/shopping/etc).",
         "properties": {
           "location": {
             "$ref": "#/components/schemas/LocationCoords"
@@ -587,7 +587,7 @@
         ]
       },
       "CloseSchoolsParameters": {
-        "title": "CloseSchoolsParameters",
+        "title": "Close Schools Parameters",
         "type": "object",
         "description": "The parameters for the `closeSchools` action.",
         "properties": {
@@ -600,7 +600,7 @@
         ]
       },
       "CloseRecreationalLocationsParameters": {
-        "title": "CloseRecreationalLocationsParameters",
+        "title": "Close Recreational Locations Parameters",
         "type": "object",
         "description": "The parameters for the `closeRecreationalLocations` action.",
         "properties": {
@@ -754,7 +754,7 @@
         ]
       },
       "CurfewParameters": {
-        "title": "CurfewParameters",
+        "title": "Curfew Parameters",
         "type": "object",
         "description": "The parameters for the `curfew` action.",
         "properties": {
