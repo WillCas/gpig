@@ -24,46 +24,7 @@
         "operationId": "post-info-actors",
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "uninfected": {
-                      "type": "integer"
-                    },
-                    "asymp-not-infections": {
-                      "type": "integer"
-                    },
-                    "infections": {
-                      "type": "integer"
-                    },
-                    "serious-infections": {
-                      "type": "integer"
-                    },
-                    "dead": {
-                      "type": "integer"
-                    },
-                    "recovered": {
-                      "type": "integer"
-                    }
-                  }
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "uninfected": 800000,
-                      "asymp-not-infections": 50000,
-                      "infections": 50000,
-                      "serious-infections": 50000,
-                      "dead": 25000,
-                      "recovered": 25000
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/Totals"
           },
           "404": {
             "description": "Not Found"
@@ -82,7 +43,7 @@
                     "type": "array",
                     "minItems": 0,
                     "items": {
-                      "type": "string"
+                      "$ref": "#/components/schemas/Area"
                     }
                   }
                 },
@@ -158,7 +119,7 @@
                     "type": "array",
                     "minItems": 0,
                     "items": {
-                      "type": "string"
+                      "$ref": "#/components/schemas/Area"
                     }
                   }
                 },
@@ -234,7 +195,7 @@
                     "type": "array",
                     "minItems": 0,
                     "items": {
-                      "type": "string"
+                      "$ref": "#/components/schemas/Area"
                     }
                   }
                 },
@@ -330,7 +291,9 @@
                 "type": "object",
                 "properties": {
                   "actor": {
-                    "type": "integer"
+                    "type": "integer",
+                    "format": "int32",
+                    "minimum": 0
                   }
                 },
                 "required": [
@@ -437,49 +400,12 @@
       "parameters": []
     },
     "/actions": {
-      "get": {
-        "summary": "Your GET endpoint",
-        "tags": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "425": {
-            "description": "Too Early"
-          }
-        },
-        "operationId": "get-actions",
-        "description": "Unknown",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "description": "The actions you want information on",
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Action"
-                }
-              }
-            }
-          },
-          "description": "The action(s) you want to get information on\n\nTODO: GET requests can't have a body, so this should be modified to return something without one"
-        }
-      },
       "post": {
-        "summary": "",
+        "summary": "Adjust Actions",
         "operationId": "post-actions",
         "responses": {
           "200": {
-            "description": "OK"
+            "$ref": "#/components/responses/Actions"
           },
           "201": {
             "description": "Created"
@@ -502,10 +428,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
                 "description": "The actions you want to create or update",
+                "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/Action"
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ActionCreate"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ActionDelete"
+                    }
+                  ]
                 }
               }
             }
@@ -525,12 +458,11 @@
           "amountInvested": {
             "type": "integer",
             "description": "The amount of money invested in this action in dollars"
-          },
-          "cost": {
-            "type": "integer",
-            "description": "The cost of the action"
           }
-        }
+        },
+        "required": [
+          "amountInvested"
+        ]
       },
       "FurloughParameters": {
         "title": "FurloughParameters",
@@ -542,45 +474,30 @@
             "description": "Amount invested (n money) per working person in dollars"
           },
           "location": {
-            "type": "array",
-            "description": "The grid sqaure(s) that have been selected for this action",
-            "items": {
-              "type": "integer"
-            }
-          },
-          "active": {
-            "type": "boolean",
-            "description": "Is the action running or cancelled"
+            "$ref": "#/components/schemas/LocationCoords"
           }
-        }
+        },
+        "required": [
+          "amountInvested",
+          "location"
+        ]
       },
       "InformationPressReleaseParameters": {
         "title": "InformationPressReleaseParameters",
         "type": "object",
         "description": "The parameters to the `infoPressRelease` action.\n\nPress-releases to improve morale/disseminate information, which could have a negative effect if it goes wrong and are produced every set unit of time.\n\n- Increase awareness\n- Probably increase public opinion\n- Implementation can change the amount this increases (minimum of 0 increase)\n- Implementation can alter how much the improvement is based on number of previous press releases",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique identifier for this action"
-          },
           "amountInvested": {
             "type": "integer",
             "description": "The amount this action costs in dollars"
           },
           "location": {
-            "type": "array",
-            "description": "The locations on the grid square(s) that this action is taking place",
-            "items": {
-              "type": "integer"
-            }
-          },
-          "cost": {
-            "type": "integer",
-            "description": "The amount it costs per person in dollars"
+            "$ref": "#/components/schemas/LocationCoords"
           }
         },
         "required": [
-          "id"
+          "amountInvested",
+          "location"
         ]
       },
       "LoanParameters": {
@@ -592,12 +509,15 @@
             "type": "integer",
             "description": "The amount of money loaned to WHO in dollars so far"
           }
-        }
+        },
+        "required": [
+          "amountLoaned"
+        ]
       },
-      "Action": {
-        "title": "Action",
+      "ActionCreate": {
+        "title": "Action Create",
         "type": "object",
-        "description": "The request object for an action.\n\nThe `action` parameter has to match the corresonding `parameters` object, no doing so is an error.",
+        "description": "The request object for creating an action.\n\nThe `action` parameter has to match the corresonding `parameters` object, no doing so is an error.",
         "properties": {
           "id": {
             "type": "integer",
@@ -619,17 +539,16 @@
               "infoPressRelease",
               "loan",
               "maskMandate",
-              "healthCampaign",
-              "healthServicesInvestment",
               "socialDistancingMandate",
-              "curfew"
+              "curfew",
+              "healthDrive",
+              "investInHealthServices"
             ]
           },
           "mode": {
             "type": "string",
             "enum": [
-              "create",
-              "delete"
+              "create"
             ]
           },
           "parameters": {
@@ -647,6 +566,15 @@
                 "$ref": "#/components/schemas/CloseRecreationalLocationsParameters"
               },
               {
+                "$ref": "#/components/schemas/ShieldingProgramParameters"
+              },
+              {
+                "$ref": "#/components/schemas/MovementRestrictionsParameters"
+              },
+              {
+                "$ref": "#/components/schemas/CloseBordersParameters"
+              },
+              {
                 "$ref": "#/components/schemas/InvestInVaccineParameters"
               },
               {
@@ -657,10 +585,31 @@
               },
               {
                 "$ref": "#/components/schemas/LoanParameters"
+              },
+              {
+                "$ref": "#/components/schemas/MaskMandateParameters"
+              },
+              {
+                "$ref": "#/components/schemas/HealthDriveParameters"
+              },
+              {
+                "$ref": "#/components/schemas/InvestInHealthServicesParameters"
+              },
+              {
+                "$ref": "#/components/schemas/SocialDistancingMandateParameters"
+              },
+              {
+                "$ref": "#/components/schemas/CurfewParameters"
               }
             ]
           }
-        }
+        },
+        "required": [
+          "id",
+          "action",
+          "mode",
+          "parameters"
+        ]
       },
       "TestAndIsolationParameters": {
         "title": "TestAndIsolationParameters",
@@ -685,17 +634,24 @@
             "minimum": 0
           },
           "location": {
-            "$ref": "#/components/schemas/Area"
+            "$ref": "#/components/schemas/LocationCoords"
           },
           "symptomaticOnly": {
             "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "testType",
+          "quarantinePeriod",
+          "quantity",
+          "location",
+          "symptomaticOnly"
+        ]
       },
-      "Area": {
-        "title": "Area",
+      "LocationCoords": {
+        "title": "Location Coordinates",
         "type": "array",
-        "description": "The model the defines an area coordinate.",
+        "description": "The model the defines an location coordinate.",
         "items": {
           "type": "string"
         }
@@ -706,9 +662,12 @@
         "description": "The parameters for the `stayAtHome` action.",
         "properties": {
           "location": {
-            "$ref": "#/components/schemas/Area"
+            "$ref": "#/components/schemas/LocationCoords"
           }
-        }
+        },
+        "required": [
+          "location"
+        ]
       },
       "CloseSchoolsParameters": {
         "title": "CloseSchoolsParameters",
@@ -716,30 +675,270 @@
         "description": "The parameters for the `closeSchools` action.",
         "properties": {
           "location": {
-            "$ref": "#/components/schemas/Area"
+            "$ref": "#/components/schemas/LocationCoords"
           }
-        }
+        },
+        "required": [
+          "location"
+        ]
       },
       "CloseRecreationalLocationsParameters": {
         "title": "CloseRecreationalLocationsParameters",
         "type": "object",
+        "description": "The parameters for the `closeRecreationalLocations` action.",
         "properties": {
           "location": {
-            "$ref": "#/components/schemas/Area"
+            "$ref": "#/components/schemas/LocationCoords"
           }
         },
-        "description": "The parameters for the `closeRecreationalLocations` action."
+        "required": [
+          "location"
+        ]
+      },
+      "ActionDelete": {
+        "title": "Action Delete",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "mode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "mode"
+        ],
+        "description": "The request object for deleting an action."
+      },
+      "ShieldingProgramParameters": {
+        "title": "Shielding Program Parameters",
+        "type": "object",
+        "description": "The parameters for the `shieldingProgram` action.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "vulnerablePeople": {
+            "type": "boolean",
+            "default": false
+          },
+          "ageThreshold": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          }
+        },
+        "required": [
+          "location"
+        ]
+      },
+      "MovementRestrictionsParameters": {
+        "title": "Movement Restrictions Parameters",
+        "type": "object",
+        "description": "The parameters for the `movementRestrictions` action.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "distance": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "location",
+          "distance"
+        ]
+      },
+      "CloseBordersParameters": {
+        "title": "Close Borders Parameters",
+        "type": "object",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": [
+          "location"
+        ],
+        "description": "The parameters for the `closeBorders` action."
+      },
+      "MaskMandateParameters": {
+        "title": "Mask Mandate Parameters",
+        "type": "object",
+        "description": "The parameters for the `maskMandate` action.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "maskProvisionLevel": {
+            "type": "integer",
+            "format": "int32",
+            "enum": [
+              0,
+              1,
+              2
+            ]
+          }
+        },
+        "required": [
+          "location",
+          "maskProvisionLevel"
+        ]
+      },
+      "HealthDriveParameters": {
+        "title": "Health Drive Parameters",
+        "type": "object",
+        "description": "The parameters for the `healthDrive` action.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": [
+          "location"
+        ]
+      },
+      "InvestInHealthServicesParameters": {
+        "title": "Invest In Health Services Parameters",
+        "type": "object",
+        "description": "The parameters for the `investInHealthServices` action.",
+        "properties": {
+          "amountInvested": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "amountInvested"
+        ]
+      },
+      "SocialDistancingMandateParameters": {
+        "title": "Social Distancing Mandate Parameters",
+        "type": "object",
+        "description": "The parameters for the `socialDistancingMadate` action.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "distance": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "location"
+        ]
+      },
+      "CurfewParameters": {
+        "title": "CurfewParameters",
+        "type": "object",
+        "description": "The parameters for the `curfew` action.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": [
+          "location"
+        ]
       }
     },
     "securitySchemes": {},
     "responses": {
       "Actions": {
-        "description": "Response for the action POST endpoint",
+        "description": "Response for POST `/actions`",
         "content": {
           "application/json": {
             "schema": {
               "type": "array",
-              "items": {}
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int32",
+                    "minimum": 0
+                  },
+                  "code": {
+                    "type": "integer",
+                    "format": "int32",
+                    "minimum": 0
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "code"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Totals": {
+        "description": "The response from GET `/info/totals`",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "uninfected": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 0
+                },
+                "asymptomaticInfectedNotInfectious": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 0
+                },
+                "asymptomaticInfectedInfectious": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 0
+                },
+                "symptomatic": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 0
+                },
+                "seriousInfection": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 0
+                },
+                "dead": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 0
+                },
+                "recoveredImmune": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "uninfected",
+                "asymptomaticInfectedNotInfectious",
+                "asymptomaticInfectedInfectious",
+                "symptomatic",
+                "seriousInfection",
+                "dead",
+                "recoveredImmune"
+              ]
             }
           }
         }
