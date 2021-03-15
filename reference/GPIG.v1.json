@@ -653,7 +653,7 @@
                 "$ref": "#/components/schemas/FurloughParameters"
               },
               {
-                "$ref": "#/components/schemas/InformationPressReleasesParameters"
+                "$ref": "#/components/schemas/InformationPressReleaseParameters"
               },
               {
                 "$ref": "#/components/schemas/LoanParameters"
