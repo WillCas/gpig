@@ -517,8 +517,8 @@
   },
   "components": {
     "schemas": {
-      "InvestVaccineParameters": {
-        "title": "InvestVaccineParameters",
+      "InvestInVaccineParameters": {
+        "title": "InvestInVaccineParameters",
         "type": "object",
         "description": "The parameters to the `investInVaccine` action.\n\nWork towards producing a vaccine for the contagion. A vaccine is produced once US$80 million has been invested in the production of a vaccine, at this point further investment will lead to subsequent vaccines being produced via the same process. The produced vaccine will be as described in section 8 of the GPIG Cross-Team Competition Rules.",
         "properties": {
@@ -647,7 +647,7 @@
                 "$ref": "#/components/schemas/CloseRecreationalLocationsParameters"
               },
               {
-                "$ref": "#/components/schemas/InvestVaccineParameters"
+                "$ref": "#/components/schemas/InvestInVaccineParameters"
               },
               {
                 "$ref": "#/components/schemas/FurloughParameters"
