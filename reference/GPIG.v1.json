@@ -609,7 +609,7 @@
       "LocationCoords": {
         "title": "Location Coordinates",
         "type": "array",
-        "description": "The coordinate array targeting a given location.\n\nCoordinates are a reference to a specific grid and sub-grid in increasing in specificity. The format for coordinates is `/$[A-D][0-3]^/`.",
+        "description": "The coordinate array targeting a given location.\n\nCoordinates are a reference to a specific grid and sub-grid in increasing in specificity.",
         "items": {
           "type": "string",
           "pattern": "^[A-D][0-3]$"
