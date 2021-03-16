@@ -218,27 +218,32 @@
       },
       "parameters": []
     },
-    "/info/actors/{id}": {
-      "parameters": [
-        {
-          "schema": {
-            "type": "integer"
-          },
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "description": "The actor ID to request the state of"
-        }
-      ],
-      "get": {
-        "summary": "Get actor by ID",
-        "operationId": "get-info-actor-id",
+    "/info/actor-data": {
+      "parameters": [],
+      "post": {
+        "summary": "",
+        "operationId": "post-info-actor-data",
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Actor"
+            "$ref": "#/components/responses/Actors"
           }
         },
-        "description": "Request for the current state of an actor."
+        "description": "Request the state of a set of actors.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "description": "An array of actor IDs."
+        }
       }
     },
     "/status": {
@@ -279,8 +284,8 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "health-org-turn": true,
-                      "current-turn": 0,
+                      "isWhoTurn": true,
+                      "turnCount": 0,
                       "budget": 1000
                     }
                   }
@@ -815,6 +820,55 @@
         "required": [
           "location"
         ]
+      },
+      "Actor": {
+        "title": "Actor",
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "uninfected",
+              "asymptomaticInfectedNotInfectious",
+              "asymptomaticInfectedInfectious",
+              "symptomatic",
+              "seriousInfection",
+              "dead",
+              "recoveredImmune"
+            ],
+            "description": "The current infection state of the actor."
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "home": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The age of the actor in years."
+          },
+          "vulnerable": {
+            "type": "boolean",
+            "description": "A flag for whether the actor is considered clinically vulnerable."
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The ID of the actor."
+          }
+        },
+        "required": [
+          "state",
+          "location",
+          "home",
+          "age",
+          "vulnerable",
+          "id"
+        ]
       }
     },
     "securitySchemes": {},
@@ -910,57 +964,15 @@
           }
         }
       },
-      "Actor": {
+      "Actors": {
         "description": "An actor.",
         "content": {
           "application/json": {
             "schema": {
-              "type": "object",
-              "properties": {
-                "state": {
-                  "type": "string",
-                  "enum": [
-                    "uninfected",
-                    "asymptomaticInfectedNotInfectious",
-                    "asymptomaticInfectedInfectious",
-                    "symptomatic",
-                    "seriousInfection",
-                    "dead",
-                    "recoveredImmune"
-                  ],
-                  "description": "The current infection state of the actor."
-                },
-                "location": {
-                  "$ref": "#/components/schemas/LocationCoords"
-                },
-                "home": {
-                  "$ref": "#/components/schemas/LocationCoords"
-                },
-                "age": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 0,
-                  "description": "The age of the actor in years."
-                },
-                "vulnerable": {
-                  "type": "boolean",
-                  "description": "A flag for whether the actor is considered clinically vulnerable."
-                },
-                "id": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 0,
-                  "description": "The ID of the actor."
-                }
-              },
-              "required": [
-                "state",
-                "location",
-                "home",
-                "age",
-                "vulnerable",
-                "id"
-              ]
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Actor"
+              }
             }
           }
         }
