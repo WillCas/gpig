@@ -4,15 +4,12 @@
     "title": "GPIG",
     "description": "GPIG API",
     "version": "1.0",
-    "contact": {
-      "name": "William Castle",
-      "email": "willcas1@hotmail.com"
-    }
+    "contact": {}
   },
   "servers": [
     {
       "url": "http://localhost:3000",
-      "description": ""
+      "description": "Default Server"
     }
   ],
   "tags": [],
@@ -79,11 +76,17 @@
                   "properties": {
                     "actors": {
                       "type": "array",
+                      "description": "An array of actor IDs.",
                       "items": {
-                        "type": "integer"
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 0
                       }
                     }
-                  }
+                  },
+                  "required": [
+                    "actors"
+                  ]
                 },
                 "examples": {
                   "example": {
@@ -150,11 +153,17 @@
                   "properties": {
                     "actors": {
                       "type": "array",
+                      "description": "An array of actor IDs.",
                       "items": {
-                        "type": "integer"
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 0
                       }
                     }
-                  }
+                  },
+                  "required": [
+                    "actors"
+                  ]
                 },
                 "examples": {
                   "example-1": {
@@ -243,16 +252,28 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "health-org-turn": {
-                      "type": "boolean"
+                    "isWhoTurn": {
+                      "type": "boolean",
+                      "description": "Whether it is currently the turn of the WHO model."
                     },
-                    "current-turn": {
-                      "type": "integer"
+                    "turnCount": {
+                      "type": "integer",
+                      "format": "int32",
+                      "minimum": 0,
+                      "description": "The amount of full turns (i.e. virus->who) that have completed."
                     },
                     "budget": {
-                      "type": "integer"
+                      "type": "integer",
+                      "format": "int32",
+                      "minimum": 0,
+                      "description": "The total budget the WHO has for the current turn. This can only be considered valid when `isWhoTurn` is `true`."
                     }
-                  }
+                  },
+                  "required": [
+                    "isWhoTurn",
+                    "turnCount",
+                    "budget"
+                  ]
                 },
                 "examples": {
                   "example": {
@@ -285,18 +306,30 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "unit": {
-                      "type": "string",
-                      "enum": [
-                        "seconds",
-                        "minutes",
-                        "hours",
-                        "days"
+                    "turnLength": {
+                      "type": "object",
+                      "properties": {
+                        "unit": {
+                          "type": "string",
+                          "enum": [
+                            "seconds",
+                            "minutes",
+                            "hours",
+                            "days"
+                          ],
+                          "description": "The unit of time to measure in."
+                        },
+                        "count": {
+                          "type": "integer",
+                          "format": "int32",
+                          "minimum": 1,
+                          "description": "The amount of unit of time each turn consists of."
+                        }
+                      },
+                      "required": [
+                        "unit",
+                        "count"
                       ]
-                    },
-                    "count": {
-                      "type": "integer",
-                      "minimum": 1
                     }
                   }
                 },
@@ -355,7 +388,8 @@
                     {
                       "$ref": "#/components/schemas/ActionDelete"
                     }
-                  ]
+                  ],
+                  "description": "Any number of create/delete actions are allowed."
                 }
               }
             }
@@ -370,11 +404,11 @@
       "InvestInVaccineParameters": {
         "title": "Invest In Vaccine Parameters",
         "type": "object",
-        "description": "The parameters to the `investInVaccine` action.\n\nWork towards producing a vaccine for the contagion. A vaccine is produced once US$80 million has been invested in the production of a vaccine, at this point further investment will lead to subsequent vaccines being produced via the same process. The produced vaccine will be as described in section 8 of the GPIG Cross-Team Competition Rules.",
+        "description": "The parameters to the `investInVaccine` action.\n\nAction: Work towards producing a vaccine for the contagion. A vaccine is produced once US$80 million has been invested in the production of a vaccine, at this point further investment will lead to subsequent vaccines being produced via the same process. The produced vaccine will be as described in section 8 of the GPIG Cross-Team Competition Rules.",
         "properties": {
           "amountInvested": {
             "type": "integer",
-            "description": "The amount of money invested in this action in dollars"
+            "description": "Amount invested for this turn."
           }
         },
         "required": [
@@ -384,11 +418,11 @@
       "FurloughParameters": {
         "title": "Furlough Parameters",
         "type": "object",
-        "description": "The parameters to the `furlough` action.\n\nProvide monetary support to those who are not able to work due to the contagion, propping up businesses that are not viable during the pandemic.\n\n- Reduces the number of people going to work\n- Higher amount results in higher budget cost\n- If used in combination with action 2 or 4, that action’s GDP cost is reduced\n",
+        "description": "The parameters to the `furlough` action.\n\nAction: Provide monetary support to those who are not able to work due to the contagion, propping up businesses that are not viable during the pandemic.\n\n- Reduces the number of people going to work\n- Higher amount results in higher budget cost\n- If used in combination with action 2 or 4, that action’s GDP cost is reduced\n",
         "properties": {
           "amountInvested": {
             "type": "integer",
-            "description": "Amount invested (n money) per working person in dollars"
+            "description": "Amount invested per working person."
           },
           "location": {
             "$ref": "#/components/schemas/LocationCoords"
@@ -402,11 +436,11 @@
       "InformationPressReleaseParameters": {
         "title": "Information Press Release Parameters",
         "type": "object",
-        "description": "The parameters to the `infoPressRelease` action.\n\nPress-releases to improve morale/disseminate information, which could have a negative effect if it goes wrong and are produced every set unit of time.\n\n- Increase awareness\n- Probably increase public opinion\n- Implementation can change the amount this increases (minimum of 0 increase)\n- Implementation can alter how much the improvement is based on number of previous press releases",
+        "description": "The parameters to the `infoPressRelease` action.\n\nAction: Press-releases to improve morale/disseminate information, which could have a negative effect if it goes wrong and are produced every set unit of time.\n\n- Increase awareness\n- Probably increase public opinion\n- Implementation can change the amount this increases (minimum of 0 increase)\n- Implementation can alter how much the improvement is based on number of previous press releases",
         "properties": {
           "amountInvested": {
             "type": "integer",
-            "description": "The amount this action costs in dollars"
+            "description": "Amount invested in total."
           },
           "location": {
             "$ref": "#/components/schemas/LocationCoords"
@@ -420,11 +454,11 @@
       "LoanParameters": {
         "title": "Loan Parameters",
         "type": "object",
-        "description": "The parameters to the `loan` action.\n\nAction to allow the WHO to take additional Budget for situations in which they run out of money. Negative effects of taking a loan are considered too long term or otherwise out of scope\n\n- Reduction in Score\n- Increase in Budget for the following turn (Lump sum)\n",
+        "description": "The parameters to the `loan` action.\n\nAction: Allow the WHO to take additional Budget for situations in which they run out of money. Negative effects of taking a loan are considered too long term or otherwise out of scope\n\n- Reduction in Score\n- Increase in Budget for the following turn (Lump sum)\n",
         "properties": {
           "amountLoaned": {
             "type": "integer",
-            "description": "The amount of money loaned to WHO in dollars so far"
+            "description": "Total amount to be loaned to the WHO."
           }
         },
         "required": [
@@ -439,7 +473,8 @@
           "id": {
             "type": "integer",
             "minimum": 0,
-            "format": "int32"
+            "format": "int32",
+            "description": "The ID of the created action. This can then be used for deletion later."
           },
           "action": {
             "type": "string",
@@ -460,7 +495,8 @@
               "curfew",
               "healthDrive",
               "investInHealthServices"
-            ]
+            ],
+            "description": ""
           },
           "mode": {
             "type": "string",
@@ -518,7 +554,8 @@
               {
                 "$ref": "#/components/schemas/CurfewParameters"
               }
-            ]
+            ],
+            "description": "The parameters of the action. This object has to match with the corresponding action name."
           }
         },
         "required": [
@@ -533,32 +570,36 @@
         "type": "object",
         "description": "The parameters for the `testAndIsolation` action.\n\nAction: Starts a test-and-isolation program in an area using the given budget that will test symptomatic people or any person who requests, and any who return positive are automatically recommended to self-isolate.",
         "properties": {
-          "testType": {
-            "type": "string",
+          "testQuality": {
+            "type": "integer",
+            "description": "The quality level of the tests used. 0 is low-quality, 1 is high-quality.",
             "enum": [
-              "good",
-              "bad"
+              0,
+              1
             ]
           },
           "quarantinePeriod": {
             "type": "integer",
             "format": "int32",
-            "minimum": 0
+            "minimum": 0,
+            "description": "The period of time a person is asked to self-isolate in day after receiving a positive result."
           },
           "quantity": {
             "type": "integer",
             "format": "int32",
-            "minimum": 0
+            "minimum": 0,
+            "description": "The quantity of tests requested."
           },
           "location": {
             "$ref": "#/components/schemas/LocationCoords"
           },
           "symptomaticOnly": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether to test symptomatic people only."
           }
         },
         "required": [
-          "testType",
+          "testQuality",
           "quarantinePeriod",
           "quantity",
           "location",
@@ -568,9 +609,10 @@
       "LocationCoords": {
         "title": "Location Coordinates",
         "type": "array",
-        "description": "The model the defines an location coordinate.",
+        "description": "The coordinate array targeting a given location.\n\nCoordinates are a reference to a specific grid and sub-grid in increasing in specificity. The format for coordinates is `/$[A-D][0-3]^/`.",
         "items": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^[A-D][0-3]$"
         }
       },
       "StayAtHomeParameters": {
@@ -589,7 +631,7 @@
       "CloseSchoolsParameters": {
         "title": "Close Schools Parameters",
         "type": "object",
-        "description": "The parameters for the `closeSchools` action.",
+        "description": "The parameters for the `closeSchools` action.\n\nAction: Close all schools in the given location and prevent school-age people from mixing at school.",
         "properties": {
           "location": {
             "$ref": "#/components/schemas/LocationCoords"
@@ -602,7 +644,7 @@
       "CloseRecreationalLocationsParameters": {
         "title": "Close Recreational Locations Parameters",
         "type": "object",
-        "description": "The parameters for the `closeRecreationalLocations` action.",
+        "description": "The parameters for the `closeRecreationalLocations` action.\n\nAction: Close all recreational facilities in the given location and prevent mixing of people and households in these locations.",
         "properties": {
           "location": {
             "$ref": "#/components/schemas/LocationCoords"
@@ -615,11 +657,13 @@
       "ActionDelete": {
         "title": "Action Delete",
         "type": "object",
+        "description": "The request object for deleting an action.",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int32",
-            "minimum": 0
+            "minimum": 0,
+            "description": "The ID of the action to delete."
           },
           "mode": {
             "type": "string"
@@ -628,24 +672,25 @@
         "required": [
           "id",
           "mode"
-        ],
-        "description": "The request object for deleting an action."
+        ]
       },
       "ShieldingProgramParameters": {
         "title": "Shielding Program Parameters",
         "type": "object",
-        "description": "The parameters for the `shieldingProgram` action.",
+        "description": "The parameters for the `shieldingProgram` action.\n\nAction: Instruct people to isolate to reduce chance of catching contagion.",
         "properties": {
           "location": {
             "$ref": "#/components/schemas/LocationCoords"
           },
           "vulnerablePeople": {
             "type": "boolean",
-            "default": false
+            "default": false,
+            "description": "If true, clinically vulnerable people will be required to shield. If not given, defaults to false."
           },
           "ageThreshold": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "description": "If given, people equal or over the threshold will be required to shield. If not given, or set to `null`, then age is ignored for shielding."
           }
         },
         "required": [
@@ -655,7 +700,7 @@
       "MovementRestrictionsParameters": {
         "title": "Movement Restrictions Parameters",
         "type": "object",
-        "description": "The parameters for the `movementRestrictions` action.",
+        "description": "The parameters for the `movementRestrictions` action.\n\nAction: Stop people from travelling a certain distance away from their household.",
         "properties": {
           "location": {
             "$ref": "#/components/schemas/LocationCoords"
@@ -663,7 +708,8 @@
           "distance": {
             "type": "integer",
             "format": "int32",
-            "minimum": 0
+            "minimum": 0,
+            "description": "The distance in terms of the lowest-level grid size."
           }
         },
         "required": [
@@ -682,12 +728,12 @@
         "required": [
           "location"
         ],
-        "description": "The parameters for the `closeBorders` action."
+        "description": "The parameters for the `closeBorders` action.\n\nAction: Stop all movement between one location and all others."
       },
       "MaskMandateParameters": {
         "title": "Mask Mandate Parameters",
         "type": "object",
-        "description": "The parameters for the `maskMandate` action.",
+        "description": "The parameters for the `maskMandate` action.\n\nAction: Require people to wear masks while in public to reduce the spread of the contagion.",
         "properties": {
           "location": {
             "$ref": "#/components/schemas/LocationCoords"
@@ -699,7 +745,8 @@
               0,
               1,
               2
-            ]
+            ],
+            "description": "The level at which to provision masks for public use. 0 is no provisioning at all, 1 is low-quality mask provisioning, and 2 is high-quality mask provisioning."
           }
         },
         "required": [
@@ -710,7 +757,7 @@
       "HealthDriveParameters": {
         "title": "Health Drive Parameters",
         "type": "object",
-        "description": "The parameters for the `healthDrive` action.",
+        "description": "The parameters for the `healthDrive` action.\n\nAction: Attempt to improve the health of people via things like exercise and healthy eating to try and improve the base well-being of the population.",
         "properties": {
           "location": {
             "$ref": "#/components/schemas/LocationCoords"
@@ -723,12 +770,13 @@
       "InvestInHealthServicesParameters": {
         "title": "Invest In Health Services Parameters",
         "type": "object",
-        "description": "The parameters for the `investInHealthServices` action.",
+        "description": "The parameters for the `investInHealthServices` action.\n\nAction: Increase investment in health services. Improves health services response to contagion.",
         "properties": {
           "amountInvested": {
             "type": "integer",
             "format": "int32",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Amount invested in total. Higher amount will result in deminising returns."
           }
         },
         "required": [
@@ -738,7 +786,7 @@
       "SocialDistancingMandateParameters": {
         "title": "Social Distancing Mandate Parameters",
         "type": "object",
-        "description": "The parameters for the `socialDistancingMadate` action.",
+        "description": "The parameters for the `socialDistancingMadate` action.\n\nAction: Introduce social distancing rules to reduce the spread caused by proximity to others in public places. Subject to disobedience.",
         "properties": {
           "location": {
             "$ref": "#/components/schemas/LocationCoords"
@@ -746,7 +794,8 @@
           "distance": {
             "type": "integer",
             "format": "int32",
-            "minimum": 0
+            "minimum": 0,
+            "description": "The distance in terms of the lowest-level grid size."
           }
         },
         "required": [
@@ -756,7 +805,7 @@
       "CurfewParameters": {
         "title": "Curfew Parameters",
         "type": "object",
-        "description": "The parameters for the `curfew` action.",
+        "description": "The parameters for the `curfew` action.\n\nAction: Introduce a curfew to require the public to not go into public places past a certain time, reducing socialisation and use of recreational businesses.",
         "properties": {
           "location": {
             "$ref": "#/components/schemas/LocationCoords"
@@ -781,15 +830,18 @@
                   "id": {
                     "type": "integer",
                     "format": "int32",
-                    "minimum": 0
+                    "minimum": 0,
+                    "description": "The ID of the action that was adjusted. This will match the ID that was sent."
                   },
                   "code": {
                     "type": "integer",
                     "format": "int32",
-                    "minimum": 0
+                    "minimum": 0,
+                    "description": "The response code for the action adjustment. This uses standard HTTP response codes. (e.g. 200 for success, 404 for an invalid location, etc.)"
                   },
                   "message": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "A message containing information about the request reponse. Typically used for debug information in the case of non 2xx status codes."
                   }
                 },
                 "required": [
@@ -858,7 +910,7 @@
         }
       },
       "Actor": {
-        "description": "Example response",
+        "description": "An actor.",
         "content": {
           "application/json": {
             "schema": {
@@ -874,24 +926,30 @@
                     "seriousInfection",
                     "dead",
                     "recoveredImmune"
-                  ]
+                  ],
+                  "description": "The current infection state of the actor."
                 },
                 "location": {
                   "$ref": "#/components/schemas/LocationCoords"
                 },
                 "home": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/LocationCoords"
                 },
                 "age": {
                   "type": "integer",
                   "format": "int32",
-                  "minimum": 0
+                  "minimum": 0,
+                  "description": "The age of the actor in years."
                 },
                 "vulnerable": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "A flag for whether the actor is considered clinically vulnerable."
+                },
+                "id": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 0,
+                  "description": "The ID of the actor."
                 }
               },
               "required": [
@@ -899,7 +957,8 @@
                 "location",
                 "home",
                 "age",
-                "vulnerable"
+                "vulnerable",
+                "id"
               ]
             }
           }
