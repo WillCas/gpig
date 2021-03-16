@@ -226,7 +226,8 @@
           },
           "name": "id",
           "in": "path",
-          "required": true
+          "required": true,
+          "description": "The actor ID to request the state of"
         }
       ],
       "get": {
