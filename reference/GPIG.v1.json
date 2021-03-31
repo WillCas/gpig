@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "GPIG",
+    "title": "GPIG Interface",
     "description": "GPIG API",
     "version": "1.0",
     "contact": {}
@@ -18,7 +18,7 @@
       "post": {
         "tags": [],
         "summary": "Get state totals within a location",
-        "operationId": "post-info-actors",
+        "operationId": "post-info-totals",
         "responses": {
           "200": {
             "$ref": "#/components/responses/Totals"
@@ -34,22 +34,16 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "location": {
-                    "$ref": "#/components/schemas/LocationCoords"
-                  }
-                },
-                "required": [
-                  "location"
-                ]
+                "$ref": "#/components/schemas/SearchRequest"
               },
               "examples": {
                 "example": {
                   "value": {
-                    "location": [
-                      "A1",
-                      "B3"
+                    "locations": [
+                      [
+                        "A1",
+                        "B3"
+                      ]
                     ]
                   }
                 }
@@ -65,41 +59,10 @@
       "post": {
         "tags": [],
         "summary": "Get all Actor IDs in a location",
-        "operationId": "post-info-actors-ids",
+        "operationId": "post-info-actors",
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "actors": {
-                      "type": "array",
-                      "description": "An array of actor IDs.",
-                      "items": {
-                        "type": "integer",
-                        "format": "int32",
-                        "minimum": 0
-                      }
-                    }
-                  },
-                  "required": [
-                    "actors"
-                  ]
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "actors": [
-                        1234,
-                        5678
-                      ]
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ActorSearchResult"
           },
           "404": {
             "description": "Not Found"
@@ -112,21 +75,15 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "location": {
-                    "$ref": "#/components/schemas/LocationCoords"
-                  }
-                },
-                "required": [
-                  "location"
-                ]
+                "$ref": "#/components/schemas/SearchRequest"
               },
               "examples": {
                 "example": {
                   "value": {
-                    "location": [
-                      "A0"
+                    "locations": [
+                      [
+                        "A0"
+                      ]
                     ]
                   }
                 }
@@ -142,42 +99,10 @@
       "post": {
         "tags": [],
         "summary": "Get actors who have home in location",
-        "operationId": "post-info-actors-homes",
+        "operationId": "post-info-homes",
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "actors": {
-                      "type": "array",
-                      "description": "An array of actor IDs.",
-                      "items": {
-                        "type": "integer",
-                        "format": "int32",
-                        "minimum": 0
-                      }
-                    }
-                  },
-                  "required": [
-                    "actors"
-                  ]
-                },
-                "examples": {
-                  "example-1": {
-                    "value": {
-                      "actors": [
-                        5678,
-                        1234,
-                        5556
-                      ]
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/ActorSearchResult"
           },
           "404": {
             "description": "Not Found"
@@ -190,24 +115,16 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "location": {
-                    "type": "array",
-                    "minItems": 0,
-                    "items": {
-                      "$ref": "#/components/schemas/LocationCoords"
-                    }
-                  }
-                },
-                "required": [
-                  "location"
-                ]
+                "$ref": "#/components/schemas/SearchRequest"
               },
               "examples": {
                 "example": {
                   "value": {
-                    "location": []
+                    "locations": [
+                      [
+                        "B2"
+                      ]
+                    ]
                   }
                 }
               }
@@ -233,16 +150,12 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 0
-                }
-              }
+                "$ref": "#/components/schemas/ActorIDArray"
+              },
+              "examples": {}
             }
           },
-          "description": "An array of actor IDs."
+          "description": ""
         }
       }
     },
@@ -252,46 +165,7 @@
         "tags": [],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "isWhoTurn": {
-                      "type": "boolean",
-                      "description": "Whether it is currently the turn of the WHO model."
-                    },
-                    "turnCount": {
-                      "type": "integer",
-                      "format": "int32",
-                      "minimum": 0,
-                      "description": "The amount of full turns (i.e. virus->who) that have completed."
-                    },
-                    "budget": {
-                      "type": "integer",
-                      "format": "int32",
-                      "minimum": 0,
-                      "description": "The total budget the WHO has for the current turn. This can only be considered valid when `isWhoTurn` is `true`."
-                    }
-                  },
-                  "required": [
-                    "isWhoTurn",
-                    "turnCount",
-                    "budget"
-                  ]
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "isWhoTurn": true,
-                      "turnCount": 0,
-                      "budget": 1000
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/SimulationStatus"
           }
         },
         "operationId": "get-status",
@@ -303,52 +177,10 @@
       "get": {
         "tags": [],
         "summary": "Get simulation settings",
-        "operationId": "post-settings",
+        "operationId": "get-settings",
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "turnLength": {
-                      "type": "object",
-                      "properties": {
-                        "unit": {
-                          "type": "string",
-                          "enum": [
-                            "seconds",
-                            "minutes",
-                            "hours",
-                            "days"
-                          ],
-                          "description": "The unit of time to measure in."
-                        },
-                        "count": {
-                          "type": "integer",
-                          "format": "int32",
-                          "minimum": 1,
-                          "description": "The amount of unit of time each turn consists of."
-                        }
-                      },
-                      "required": [
-                        "unit",
-                        "count"
-                      ]
-                    }
-                  }
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "unit": "seconds",
-                      "count": 100
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/SimulationSettings"
           }
         },
         "description": "Request the current game settings."
@@ -384,19 +216,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "description": "The actions you want to create or update",
-                "type": "array",
-                "items": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/ActionCreate"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ActionDelete"
-                    }
-                  ],
-                  "description": "Any number of create/delete actions are allowed."
-                }
+                "$ref": "#/components/schemas/ActionBatch"
               }
             }
           },
@@ -695,8 +515,10 @@
           },
           "ageThreshold": {
             "type": "integer",
+            "description": "If given, people equal or over the threshold will be required to shield. If not given, or set to `null`, then age is ignored for shielding.",
             "format": "int32",
-            "description": "If given, people equal or over the threshold will be required to shield. If not given, or set to `null`, then age is ignored for shielding."
+            "minimum": 0,
+            "nullable": true
           }
         },
         "required": [
@@ -869,6 +691,76 @@
           "vulnerable",
           "id"
         ]
+      },
+      "SearchRequest": {
+        "title": "SearchRequest",
+        "type": "object",
+        "description": "An object providing details for a search request.",
+        "properties": {
+          "locations": {
+            "type": "array",
+            "description": "The array of coordinates to search.",
+            "items": {
+              "$ref": "#/components/schemas/LocationCoords"
+            }
+          }
+        },
+        "required": [
+          "locations"
+        ]
+      },
+      "ActorIDArray": {
+        "title": "Actor ID Array",
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0
+        },
+        "description": "An array of actor IDs."
+      },
+      "ActionBatch": {
+        "title": "Action Batch",
+        "description": "The actions you want to create or update.",
+        "type": "array",
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/ActionCreate"
+            },
+            {
+              "$ref": "#/components/schemas/ActionDelete"
+            }
+          ],
+          "description": "Any number of create/delete actions are allowed."
+        }
+      },
+      "ActionResult": {
+        "title": "Action Result",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The ID of the action that was adjusted. This will match the ID that was sent."
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The response code for the action adjustment. This uses standard HTTP response codes. (e.g. 200 for success, 404 for an invalid location, etc.)"
+          },
+          "message": {
+            "type": "string",
+            "description": "A message containing information about the request reponse. Typically used for debug information in the case of non 2xx status codes."
+          }
+        },
+        "required": [
+          "id",
+          "code"
+        ],
+        "description": "The result object of an action."
       }
     },
     "securitySchemes": {},
@@ -880,29 +772,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "integer",
-                    "format": "int32",
-                    "minimum": 0,
-                    "description": "The ID of the action that was adjusted. This will match the ID that was sent."
-                  },
-                  "code": {
-                    "type": "integer",
-                    "format": "int32",
-                    "minimum": 0,
-                    "description": "The response code for the action adjustment. This uses standard HTTP response codes. (e.g. 200 for success, 404 for an invalid location, etc.)"
-                  },
-                  "message": {
-                    "type": "string",
-                    "description": "A message containing information about the request reponse. Typically used for debug information in the case of non 2xx status codes."
-                  }
-                },
-                "required": [
-                  "id",
-                  "code"
-                ]
+                "$ref": "#/components/schemas/ActionResult"
               }
             }
           }
@@ -965,13 +835,101 @@
         }
       },
       "Actors": {
-        "description": "An actor.",
+        "description": "An array of actors.",
         "content": {
           "application/json": {
             "schema": {
               "type": "array",
               "items": {
                 "$ref": "#/components/schemas/Actor"
+              }
+            }
+          }
+        }
+      },
+      "ActorSearchResult": {
+        "description": "The resonse from a search endpoint. Contains all of the IDs of the actors who matched the query.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "actors": {
+                  "$ref": "#/components/schemas/ActorIDArray"
+                }
+              },
+              "required": [
+                "actors"
+              ]
+            }
+          }
+        }
+      },
+      "SimulationStatus": {
+        "description": "The current simulation status from the server.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "isWhoTurn": {
+                  "type": "boolean",
+                  "description": "Whether it is currently the turn of the WHO model."
+                },
+                "turnCount": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 0,
+                  "description": "The amount of full turns (i.e. virus->who) that have completed."
+                },
+                "budget": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 0,
+                  "description": "The total budget the WHO has for the current turn. This can only be considered valid when `isWhoTurn` is `true`."
+                }
+              },
+              "required": [
+                "isWhoTurn",
+                "turnCount",
+                "budget"
+              ]
+            }
+          }
+        }
+      },
+      "SimulationSettings": {
+        "description": "The current settings for the simulation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "turnLength": {
+                  "type": "object",
+                  "properties": {
+                    "unit": {
+                      "type": "string",
+                      "enum": [
+                        "seconds",
+                        "minutes",
+                        "hours",
+                        "days"
+                      ],
+                      "description": "The unit of time to measure in."
+                    },
+                    "count": {
+                      "type": "integer",
+                      "format": "int32",
+                      "minimum": 1,
+                      "description": "The amount of unit of time each turn consists of."
+                    }
+                  },
+                  "required": [
+                    "unit",
+                    "count"
+                  ]
+                }
               }
             }
           }
