@@ -24,10 +24,13 @@
             "$ref": "#/components/responses/Totals"
           },
           "404": {
-            "description": "Not Found"
+            "$ref": "#/components/responses/FailedRequest"
           },
           "418": {
-            "description": "I'm a teapot (RFC 2324)"
+            "$ref": "#/components/responses/FailedRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/FailedRequest"
           }
         },
         "requestBody": {
@@ -39,11 +42,9 @@
               "examples": {
                 "example": {
                   "value": {
-                    "locations": [
-                      [
-                        "A1",
-                        "B3"
-                      ]
+                    "location": [
+                      "A1",
+                      "B3"
                     ]
                   }
                 }
@@ -65,10 +66,13 @@
             "$ref": "#/components/responses/ActorSearchResult"
           },
           "404": {
-            "description": "Not Found"
+            "$ref": "#/components/responses/FailedRequest"
           },
           "418": {
-            "description": "I'm a teapot (RFC 2324)"
+            "$ref": "#/components/responses/FailedRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/FailedRequest"
           }
         },
         "requestBody": {
@@ -80,10 +84,8 @@
               "examples": {
                 "example": {
                   "value": {
-                    "locations": [
-                      [
-                        "A0"
-                      ]
+                    "location": [
+                      "A0"
                     ]
                   }
                 }
@@ -105,10 +107,13 @@
             "$ref": "#/components/responses/ActorSearchResult"
           },
           "404": {
-            "description": "Not Found"
+            "$ref": "#/components/responses/FailedRequest"
           },
           "418": {
-            "description": "I'm a teapot (RFC 2324)"
+            "$ref": "#/components/responses/FailedRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/FailedRequest"
           }
         },
         "requestBody": {
@@ -120,10 +125,8 @@
               "examples": {
                 "example": {
                   "value": {
-                    "locations": [
-                      [
-                        "B2"
-                      ]
+                    "location": [
+                      "B2"
                     ]
                   }
                 }
@@ -143,6 +146,12 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/Actors"
+          },
+          "400": {
+            "$ref": "#/components/responses/FailedRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/FailedRequest"
           }
         },
         "description": "Request the state of a set of actors.",
@@ -155,7 +164,7 @@
               "examples": {}
             }
           },
-          "description": ""
+          "description": "The array of actor IDs to fetch the data of. If any IDs are not found, then they will be omitted from the response."
         }
       }
     },
@@ -166,6 +175,9 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/SimulationStatus"
+          },
+          "500": {
+            "$ref": "#/components/responses/FailedRequest"
           }
         },
         "operationId": "get-status",
@@ -181,6 +193,9 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/SimulationSettings"
+          },
+          "500": {
+            "$ref": "#/components/responses/FailedRequest"
           }
         },
         "description": "Request the current game settings."
@@ -195,20 +210,14 @@
           "200": {
             "$ref": "#/components/responses/Actions"
           },
-          "201": {
-            "description": "Created"
-          },
-          "204": {
-            "description": "No Content"
-          },
           "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
+            "$ref": "#/components/responses/FailedRequest"
           },
           "425": {
-            "description": "Too Early"
+            "$ref": "#/components/responses/FailedRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/FailedRequest"
           }
         },
         "description": "Allows the creation and deletion of actions in batch.",
@@ -220,7 +229,7 @@
               }
             }
           },
-          "description": "The action(s) you want to create or update"
+          "description": "The action(s) you want to create or update. "
         }
       }
     }
@@ -697,16 +706,12 @@
         "type": "object",
         "description": "An object providing details for a search request.",
         "properties": {
-          "locations": {
-            "type": "array",
-            "description": "The array of coordinates to search.",
-            "items": {
-              "$ref": "#/components/schemas/LocationCoords"
-            }
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
           }
         },
         "required": [
-          "locations"
+          "location"
         ]
       },
       "ActorIDArray": {
@@ -766,11 +771,12 @@
     "securitySchemes": {},
     "responses": {
       "Actions": {
-        "description": "Response for POST `/actions`",
+        "description": "An array of action response objects.\n\nIf the endpoint returns a 425 status code (too early), then every action response will have the same error code and message. This status code is only returned if an action change is requested outside of the WHO's turn.",
         "content": {
           "application/json": {
             "schema": {
               "type": "array",
+              "description": "An array of action response object. Objects are in identical index order to the request array, and each object has the ID of the request it came from.",
               "items": {
                 "$ref": "#/components/schemas/ActionResult"
               }
@@ -931,6 +937,33 @@
                   ]
                 }
               }
+            }
+          }
+        }
+      },
+      "FailedRequest": {
+        "description": "If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 400,
+                  "exclusiveMaximum": true,
+                  "maximum": 600,
+                  "description": "The status code of the request. Will always be 4xx or 5xx, as reponse is only used in these conditions."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "A message containing extra information on what went wrong."
+                }
+              },
+              "required": [
+                "code"
+              ]
             }
           }
         }
