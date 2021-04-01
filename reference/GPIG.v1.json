@@ -220,7 +220,7 @@
             "$ref": "#/components/responses/FailedRequest"
           }
         },
-        "description": "Allows the creation and deletion of actions in batch.",
+        "description": "Allows the creation and deletion of actions in batch. This request will only fail when the entire request does, individual actions will each have their own response objects with dedicated status codes.\n\nThis means that if an action fails with the status code 400, then the HTTP request will respond with 200, however the action reponse object with the same index will contain a code of 400.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -303,7 +303,7 @@
       "ActionCreate": {
         "title": "Action Create",
         "type": "object",
-        "description": "The request object for creating an action.\n\nThe `action` parameter has to match the corresonding `parameters` object, no doing so is an error.",
+        "description": "The request object for creating an action.\n\nThe `action` parameter has to match the corresonding `parameters` object, not doing so is an error.",
         "properties": {
           "id": {
             "type": "integer",
@@ -331,13 +331,14 @@
               "healthDrive",
               "investInHealthServices"
             ],
-            "description": ""
+            "description": "The action kind. Each kind has a specific set of parameters that it allows."
           },
           "mode": {
             "type": "string",
             "enum": [
               "create"
-            ]
+            ],
+            "description": "What change will be made to the action. For creation, this property always has to be 'create'."
           },
           "parameters": {
             "oneOf": [
@@ -390,7 +391,7 @@
                 "$ref": "#/components/schemas/CurfewParameters"
               }
             ],
-            "description": "The parameters of the action. This object has to match with the corresponding action name."
+            "description": "The parameters of the action. This object has to match with the corresponding action kind."
           }
         },
         "required": [
@@ -501,7 +502,11 @@
             "description": "The ID of the action to delete."
           },
           "mode": {
-            "type": "string"
+            "type": "string",
+            "description": "What change will be made to the action. For deletion, this property always has to be 'delete'.",
+            "enum": [
+              "delete"
+            ]
           }
         },
         "required": [
