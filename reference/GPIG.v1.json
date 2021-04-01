@@ -42,9 +42,11 @@
               "examples": {
                 "example": {
                   "value": {
-                    "location": [
-                      "A1",
-                      "B3"
+                    "locations": [
+                      [
+                        "A1",
+                        "B3"
+                      ]
                     ]
                   }
                 }
@@ -84,8 +86,10 @@
               "examples": {
                 "example": {
                   "value": {
-                    "location": [
-                      "A0"
+                    "locations": [
+                      [
+                        "A0"
+                      ]
                     ]
                   }
                 }
@@ -125,8 +129,10 @@
               "examples": {
                 "example": {
                   "value": {
-                    "location": [
-                      "B2"
+                    "locations": [
+                      [
+                        "B2"
+                      ]
                     ]
                   }
                 }
@@ -711,12 +717,16 @@
         "type": "object",
         "description": "An object providing details for a search request.",
         "properties": {
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
+          "locations": {
+            "description": "The array of coordinates to search.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocationCoords"
+            }
           }
         },
         "required": [
-          "location"
+          "locations"
         ]
       },
       "ActorIDArray": {
@@ -771,6 +781,85 @@
           "code"
         ],
         "description": "The result object of an action."
+      },
+      "ActorSearchResult": {
+        "title": "ActorSearchResult",
+        "type": "object",
+        "description": "The object containing the result from an actor search. Provides both the location the search was done against, and all of the IDs of the actors that match the search.",
+        "properties": {
+          "actors": {
+            "$ref": "#/components/schemas/ActorIDArray"
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": [
+          "actors",
+          "location"
+        ]
+      },
+      "InfectionTotals": {
+        "title": "InfectionTotals",
+        "type": "object",
+        "description": "Provides the number of people in each infection state in a given location.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "uninfected": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "Number of people who have never come into contact with the virus."
+          },
+          "asymptomaticInfectedNotInfectious": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "Number of people who have contracted the virus, but are not showing symptoms, nor are capable of spreading it."
+          },
+          "asymptomaticInfectedInfectious": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "Number of people who have contracted the virus, are not showing symptoms, but are able to spread it to others."
+          },
+          "symptomatic": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "Number of people who have contracted the virus and are showing symptoms of it. They can also spread it to others."
+          },
+          "seriousInfection": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "Number of people who have been hospitalised due to the virus."
+          },
+          "dead": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "Number of people who have died due to the virus."
+          },
+          "recoveredImmune": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "Number of people who have contracted the virus, but have fully recovered and are not able to spread it or re-contract it."
+          }
+        },
+        "required": [
+          "location",
+          "uninfected",
+          "asymptomaticInfectedNotInfectious",
+          "asymptomaticInfectedInfectious",
+          "symptomatic",
+          "seriousInfection",
+          "dead",
+          "recoveredImmune"
+        ]
       }
     },
     "securitySchemes": {},
@@ -790,57 +879,14 @@
         }
       },
       "Totals": {
-        "description": "The response from GET `/info/totals`",
+        "description": "An array of infection totals each, for a requested location.",
         "content": {
           "application/json": {
             "schema": {
-              "type": "object",
-              "properties": {
-                "uninfected": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 0
-                },
-                "asymptomaticInfectedNotInfectious": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 0
-                },
-                "asymptomaticInfectedInfectious": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 0
-                },
-                "symptomatic": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 0
-                },
-                "seriousInfection": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 0
-                },
-                "dead": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 0
-                },
-                "recoveredImmune": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 0
-                }
-              },
-              "required": [
-                "uninfected",
-                "asymptomaticInfectedNotInfectious",
-                "asymptomaticInfectedInfectious",
-                "symptomatic",
-                "seriousInfection",
-                "dead",
-                "recoveredImmune"
-              ]
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/InfectionTotals"
+              }
             }
           }
         }
@@ -859,19 +905,14 @@
         }
       },
       "ActorSearchResult": {
-        "description": "The resonse from a search endpoint. Contains all of the IDs of the actors who matched the query.",
+        "description": "The resonse from a search endpoint. Provides an array of search result objects in the index order of the request array.",
         "content": {
           "application/json": {
             "schema": {
-              "type": "object",
-              "properties": {
-                "actors": {
-                  "$ref": "#/components/schemas/ActorIDArray"
-                }
-              },
-              "required": [
-                "actors"
-              ]
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ActorSearchResult"
+              }
             }
           }
         }
