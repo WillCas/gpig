@@ -2,16 +2,11 @@
   "openapi": "3.0.0",
   "info": {
     "title": "GPIG Interface",
-    "description": "GPIG API",
+    "description": "This is the primary defintion for the GPIG interface that all teams should work from. This interface is designed from the perspective that the virus model is the server, and the WHO model is the client making requests. Extensions and modifications are allowed at the discretion of the clients.\n\nThere are a number of general minimum requirements for the server that are assumed:\n\n- Requests can support a body of up to 10MB\n- Responses can support a body of up to 100MB\n\nEach 'full turn' is a complete virus -> WHO back-and-forth. This reflects a 'ply'.",
     "version": "1.0",
     "contact": {}
   },
-  "servers": [
-    {
-      "url": "http://localhost:3000",
-      "description": "Default Server"
-    }
-  ],
+  "servers": [],
   "tags": [],
   "paths": {
     "/info/totals": {
@@ -449,12 +444,12 @@
         ]
       },
       "LocationCoords": {
-        "title": "Location Coordinates",
         "type": "array",
-        "description": "The coordinate array targeting a given location.\n\nCoordinates are a reference to a specific grid and sub-grid in increasing in specificity.",
+        "title": "Location Coordinates",
+        "description": "The coordinate array targeting a given location.\n\nCoordinates are a reference to a specific grid and sub-grid in increasing in specificity. The grid is a conceptual overlay over the map to enable an abstract method of referencing sections of the map. Due to a lack of official documentation on how grid coordinates function, they are up for interpretation for specific usage in implementations.",
+        "minItems": 1,
         "items": {
-          "type": "string",
-          "pattern": "^[A-D][0-3]$"
+          "$ref": "#/components/schemas/LocationCoord"
         }
       },
       "StayAtHomeParameters": {
@@ -700,7 +695,7 @@
             "type": "integer",
             "format": "int32",
             "minimum": 0,
-            "description": "The ID of the actor."
+            "description": "The ID of the actor. This is unique for each actor."
           }
         },
         "required": [
@@ -780,7 +775,7 @@
           "id",
           "code"
         ],
-        "description": "The result object of an action."
+        "description": "The result object of an action.\n\nIf an action was sent with a coordinate that does not exist, then this response will have the code 404, and the action will not be applied.\n\nIf an action failed to apply (i.e. that action has not been applied to the server), then the reponse will have the code 500. If an action has been _partially_ applied, then these changes must be undone by the server before the response is sent."
       },
       "ActorSearchResult": {
         "title": "ActorSearchResult",
@@ -860,12 +855,38 @@
           "dead",
           "recoveredImmune"
         ]
+      },
+      "LocationDefinition": {
+        "title": "LocationDefinition",
+        "type": "object",
+        "description": "A definition for a given location that is available.",
+        "properties": {
+          "coord": {
+            "$ref": "#/components/schemas/LocationCoord"
+          },
+          "subLocations": {
+            "type": "array",
+            "description": "An array of sub-locations that are under this location. If not given, or empty, then there are no sub-locations.",
+            "items": {
+              "$ref": "#/components/schemas/LocationDefinition"
+            }
+          }
+        },
+        "required": [
+          "coord"
+        ]
+      },
+      "LocationCoord": {
+        "type": "string",
+        "title": "LocationCoord",
+        "pattern": "^[A-Z][0-9]+$",
+        "description": "A single coordinate for a location."
       }
     },
     "securitySchemes": {},
     "responses": {
       "Actions": {
-        "description": "An array of action response objects.\n\nIf the endpoint returns a 425 status code (too early), then every action response will have the same error code and message. This status code is only returned if an action change is requested outside of the WHO's turn.",
+        "description": "An array of action response objects.\n\nIf the endpoint returns a 425 status code (too early), then every action response will have the same error code and message, and no action will be applied. This status code is only returned if an action change is requested outside of the WHO's turn.",
         "content": {
           "application/json": {
             "schema": {
@@ -932,7 +953,7 @@
                   "type": "integer",
                   "format": "int32",
                   "minimum": 0,
-                  "description": "The amount of full turns (i.e. virus->who) that have completed."
+                  "description": "The amount of full turns (i.e. virus->who) that have completed. For the first full turn, this number is set to zero, and it should be incremented by 1 upon WHO turn end."
                 },
                 "budget": {
                   "type": "integer",
@@ -959,6 +980,7 @@
               "properties": {
                 "turnLength": {
                   "type": "object",
+                  "description": "An object stating how much in-simulation time will pass for each full turn.",
                   "properties": {
                     "unit": {
                       "type": "string",
@@ -981,8 +1003,19 @@
                     "unit",
                     "count"
                   ]
+                },
+                "locations": {
+                  "type": "array",
+                  "minItems": 1,
+                  "description": "An array of all top-level locations that are available on the map.",
+                  "items": {
+                    "$ref": "#/components/schemas/LocationDefinition"
+                  }
                 }
-              }
+              },
+              "required": [
+                "locations"
+              ]
             }
           }
         }
