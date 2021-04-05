@@ -37,7 +37,12 @@
               "examples": {
                 "example": {
                   "value": {
-                    "locations": [["A1", "B3"]]
+                    "locations": [
+                      [
+                        "A1",
+                        "B3"
+                      ]
+                    ]
                   }
                 }
               }
@@ -76,7 +81,11 @@
               "examples": {
                 "example": {
                   "value": {
-                    "locations": [["A0"]]
+                    "locations": [
+                      [
+                        "A0"
+                      ]
+                    ]
                   }
                 }
               }
@@ -115,7 +124,11 @@
               "examples": {
                 "example": {
                   "value": {
-                    "locations": [["B2"]]
+                    "locations": [
+                      [
+                        "B2"
+                      ]
+                    ]
                   }
                 }
               }
@@ -275,7 +288,9 @@
           },
           "mode": {
             "type": "string",
-            "enum": ["create"],
+            "enum": [
+              "create"
+            ],
             "description": "What change will be made to the action. For creation, this property always has to be 'create'."
           },
           "parameters": {
@@ -332,7 +347,12 @@
             "description": "The parameters of the action. This object has to match with the corresponding action kind."
           }
         },
-        "required": ["id", "action", "mode", "parameters"]
+        "required": [
+          "id",
+          "action",
+          "mode",
+          "parameters"
+        ]
       },
       "ActionDelete": {
         "title": "Action Delete",
@@ -348,10 +368,15 @@
           "mode": {
             "type": "string",
             "description": "What change will be made to the action. For deletion, this property always has to be 'delete'.",
-            "enum": ["delete"]
+            "enum": [
+              "delete"
+            ]
           }
         },
-        "required": ["id", "mode"]
+        "required": [
+          "id",
+          "mode"
+        ]
       },
       "ActionResult": {
         "title": "Action Result",
@@ -374,7 +399,10 @@
             "description": "A message containing information about the request reponse. Typically used for debug information in the case of non 2xx status codes."
           }
         },
-        "required": ["id", "code"],
+        "required": [
+          "id",
+          "code"
+        ],
         "description": "The result object of an action.\n\nIf an action was sent with a coordinate that does not exist, then this response will have the code 404, and the action will not be applied.\n\nIf an action failed to apply (i.e. that action has not been applied to the server), then the reponse will have the code 500. If an action has been _partially_ applied, then these changes must be undone by the server before the response is sent."
       },
       "Actor": {
@@ -417,7 +445,14 @@
             "description": "The ID of the actor. This is unique for each actor."
           }
         },
-        "required": ["state", "location", "home", "age", "vulnerable", "id"]
+        "required": [
+          "state",
+          "location",
+          "home",
+          "age",
+          "vulnerable",
+          "id"
+        ]
       },
       "ActorIDArray": {
         "title": "Actor ID Array",
@@ -441,7 +476,10 @@
             "$ref": "#/components/schemas/LocationCoords"
           }
         },
-        "required": ["actors", "location"]
+        "required": [
+          "actors",
+          "location"
+        ]
       },
       "CloseBordersParameters": {
         "title": "Close Borders Parameters",
@@ -451,7 +489,9 @@
             "$ref": "#/components/schemas/LocationCoords"
           }
         },
-        "required": ["location"],
+        "required": [
+          "location"
+        ],
         "description": "The parameters for the `closeBorders` action.\n\nAction: Stop all movement between one location and all others."
       },
       "CloseRecreationalLocationsParameters": {
@@ -463,7 +503,9 @@
             "$ref": "#/components/schemas/LocationCoords"
           }
         },
-        "required": ["location"]
+        "required": [
+          "location"
+        ]
       },
       "CloseSchoolsParameters": {
         "title": "Close Schools Parameters",
@@ -474,7 +516,9 @@
             "$ref": "#/components/schemas/LocationCoords"
           }
         },
-        "required": ["location"]
+        "required": [
+          "location"
+        ]
       },
       "CurfewParameters": {
         "title": "Curfew Parameters",
@@ -485,7 +529,31 @@
             "$ref": "#/components/schemas/LocationCoords"
           }
         },
-        "required": ["location"]
+        "required": [
+          "location"
+        ]
+      },
+      "FailedRequest": {
+        "title": "Failed Request",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 400,
+            "exclusiveMaximum": true,
+            "maximum": 600,
+            "description": "The status code of the request. Will always be 4xx or 5xx, as reponse is only used in these conditions."
+          },
+          "message": {
+            "type": "string",
+            "description": "A message containing extra information on what went wrong."
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "description": "The object returned in the case that a request failed for any reason."
       },
       "FurloughParameters": {
         "title": "Furlough Parameters",
@@ -500,7 +568,10 @@
             "$ref": "#/components/schemas/LocationCoords"
           }
         },
-        "required": ["amountInvested", "location"]
+        "required": [
+          "amountInvested",
+          "location"
+        ]
       },
       "HealthDriveParameters": {
         "title": "Health Drive Parameters",
@@ -511,7 +582,9 @@
             "$ref": "#/components/schemas/LocationCoords"
           }
         },
-        "required": ["location"]
+        "required": [
+          "location"
+        ]
       },
       "InfectionTotals": {
         "title": "InfectionTotals",
@@ -588,7 +661,10 @@
             "$ref": "#/components/schemas/LocationCoords"
           }
         },
-        "required": ["amountInvested", "location"]
+        "required": [
+          "amountInvested",
+          "location"
+        ]
       },
       "InvestInHealthServicesParameters": {
         "title": "Invest In Health Services Parameters",
@@ -602,7 +678,9 @@
             "description": "Amount invested in total. Higher amount will result in deminising returns."
           }
         },
-        "required": ["amountInvested"]
+        "required": [
+          "amountInvested"
+        ]
       },
       "InvestInVaccineParameters": {
         "title": "Invest In Vaccine Parameters",
@@ -614,7 +692,9 @@
             "description": "Amount invested for this turn."
           }
         },
-        "required": ["amountInvested"]
+        "required": [
+          "amountInvested"
+        ]
       },
       "LoanParameters": {
         "title": "Loan Parameters",
@@ -626,7 +706,9 @@
             "description": "Total amount to be loaned to the WHO."
           }
         },
-        "required": ["amountLoaned"]
+        "required": [
+          "amountLoaned"
+        ]
       },
       "LocationCoord": {
         "type": "string",
@@ -659,7 +741,9 @@
             }
           }
         },
-        "required": ["coord"]
+        "required": [
+          "coord"
+        ]
       },
       "MaskMandateParameters": {
         "title": "Mask Mandate Parameters",
@@ -672,11 +756,18 @@
           "maskProvisionLevel": {
             "type": "integer",
             "format": "int32",
-            "enum": [0, 1, 2],
+            "enum": [
+              0,
+              1,
+              2
+            ],
             "description": "The level at which to provision masks for public use. 0 is no provisioning at all, 1 is low-quality mask provisioning, and 2 is high-quality mask provisioning."
           }
         },
-        "required": ["location", "maskProvisionLevel"]
+        "required": [
+          "location",
+          "maskProvisionLevel"
+        ]
       },
       "MovementRestrictionsParameters": {
         "title": "Movement Restrictions Parameters",
@@ -693,7 +784,10 @@
             "description": "The distance in terms of the lowest-level grid size."
           }
         },
-        "required": ["location", "distance"]
+        "required": [
+          "location",
+          "distance"
+        ]
       },
       "SearchRequest": {
         "title": "SearchRequest",
@@ -708,7 +802,9 @@
             }
           }
         },
-        "required": ["locations"]
+        "required": [
+          "locations"
+        ]
       },
       "ShieldingProgramParameters": {
         "title": "Shielding Program Parameters",
@@ -731,7 +827,81 @@
             "nullable": true
           }
         },
-        "required": ["location"]
+        "required": [
+          "location"
+        ]
+      },
+      "SimulationSettings": {
+        "title": "SimulationSettings",
+        "type": "object",
+        "properties": {
+          "turnLength": {
+            "type": "object",
+            "description": "An object stating how much in-simulation time will pass for each full turn.",
+            "properties": {
+              "unit": {
+                "type": "string",
+                "enum": [
+                  "seconds",
+                  "minutes",
+                  "hours",
+                  "days"
+                ],
+                "description": "The unit of time to measure in."
+              },
+              "count": {
+                "type": "integer",
+                "format": "int32",
+                "minimum": 1,
+                "description": "The amount of unit of time each turn consists of."
+              }
+            },
+            "required": [
+              "unit",
+              "count"
+            ]
+          },
+          "locations": {
+            "type": "array",
+            "minItems": 1,
+            "description": "An array of all top-level locations that are available on the map.",
+            "items": {
+              "$ref": "#/components/schemas/LocationDefinition"
+            }
+          }
+        },
+        "required": [
+          "locations"
+        ],
+        "description": "The object containing the settings for the simulation."
+      },
+      "SimulationStatus": {
+        "title": "SimulationStatus",
+        "type": "object",
+        "properties": {
+          "isWhoTurn": {
+            "type": "boolean",
+            "description": "Whether it is currently the turn of the WHO model."
+          },
+          "turnCount": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The amount of full turns (i.e. virus->who) that have completed. For the first full turn, this number is set to zero, and it should be incremented by 1 upon WHO turn end."
+          },
+          "budget": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The total budget the WHO has for the current turn. This can only be considered valid when `isWhoTurn` is `true`."
+          }
+        },
+        "required": [
+          "isWhoTurn",
+          "turnCount",
+          "budget"
+        ],
+        "description": "The object containing the status of the simulation."
       },
       "SocialDistancingMandateParameters": {
         "title": "Social Distancing Mandate Parameters",
@@ -748,7 +918,9 @@
             "description": "The distance in terms of the lowest-level grid size."
           }
         },
-        "required": ["location"]
+        "required": [
+          "location"
+        ]
       },
       "StayAtHomeParameters": {
         "title": "Stay At Home Parameters",
@@ -759,7 +931,9 @@
             "$ref": "#/components/schemas/LocationCoords"
           }
         },
-        "required": ["location"]
+        "required": [
+          "location"
+        ]
       },
       "TestAndIsolationParameters": {
         "title": "Test And Isolation Parameters",
@@ -769,7 +943,10 @@
           "testQuality": {
             "type": "integer",
             "description": "The quality level of the tests used. 0 is low-quality, 1 is high-quality.",
-            "enum": [0, 1]
+            "enum": [
+              0,
+              1
+            ]
           },
           "quarantinePeriod": {
             "type": "integer",
@@ -847,22 +1024,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 400,
-                  "exclusiveMaximum": true,
-                  "maximum": 600,
-                  "description": "The status code of the request. Will always be 4xx or 5xx, as reponse is only used in these conditions."
-                },
-                "message": {
-                  "type": "string",
-                  "description": "A message containing extra information on what went wrong."
-                }
-              },
-              "required": ["code"]
+              "$ref": "#/components/schemas/FailedRequest"
             }
           }
         }
@@ -872,65 +1034,17 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object",
-              "properties": {
-                "isWhoTurn": {
-                  "type": "boolean",
-                  "description": "Whether it is currently the turn of the WHO model."
-                },
-                "turnCount": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 0,
-                  "description": "The amount of full turns (i.e. virus->who) that have completed. For the first full turn, this number is set to zero, and it should be incremented by 1 upon WHO turn end."
-                },
-                "budget": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 0,
-                  "description": "The total budget the WHO has for the current turn. This can only be considered valid when `isWhoTurn` is `true`."
-                }
-              },
-              "required": ["isWhoTurn", "turnCount", "budget"]
+              "$ref": "#/components/schemas/SimulationStatus"
             }
           }
         }
       },
       "SimulationSettings": {
-        "description": "The current settings for the simulation",
+        "description": "The current settings for the simulation. Once a simulation has started, this should never change.",
         "content": {
           "application/json": {
             "schema": {
-              "type": "object",
-              "properties": {
-                "turnLength": {
-                  "type": "object",
-                  "description": "An object stating how much in-simulation time will pass for each full turn.",
-                  "properties": {
-                    "unit": {
-                      "type": "string",
-                      "enum": ["seconds", "minutes", "hours", "days"],
-                      "description": "The unit of time to measure in."
-                    },
-                    "count": {
-                      "type": "integer",
-                      "format": "int32",
-                      "minimum": 1,
-                      "description": "The amount of unit of time each turn consists of."
-                    }
-                  },
-                  "required": ["unit", "count"]
-                },
-                "locations": {
-                  "type": "array",
-                  "minItems": 1,
-                  "description": "An array of all top-level locations that are available on the map.",
-                  "items": {
-                    "$ref": "#/components/schemas/LocationDefinition"
-                  }
-                }
-              },
-              "required": ["locations"]
+              "$ref": "#/components/schemas/SimulationSettings"
             }
           }
         }
