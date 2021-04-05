@@ -465,7 +465,7 @@
         "description": "An array of actor IDs."
       },
       "ActorSearchResult": {
-        "title": "ActorSearchResult",
+        "title": "Actor Search Result",
         "type": "object",
         "description": "The object containing the result from an actor search. Provides both the location the search was done against, and all of the IDs of the actors that match the search.",
         "properties": {
@@ -587,7 +587,7 @@
         ]
       },
       "InfectionTotals": {
-        "title": "InfectionTotals",
+        "title": "Infection Totals",
         "type": "object",
         "description": "Provides the number of people in each infection state in a given location.",
         "properties": {
@@ -712,7 +712,7 @@
       },
       "LocationCoord": {
         "type": "string",
-        "title": "LocationCoord",
+        "title": "Location Coordinate",
         "pattern": "^[A-Z][0-9]+$",
         "description": "A single coordinate for a location."
       },
@@ -726,7 +726,7 @@
         }
       },
       "LocationDefinition": {
-        "title": "LocationDefinition",
+        "title": "Location Definition",
         "type": "object",
         "description": "A definition for a given location that is available.",
         "properties": {
@@ -790,7 +790,7 @@
         ]
       },
       "SearchRequest": {
-        "title": "SearchRequest",
+        "title": "Search Request",
         "type": "object",
         "description": "An object providing details for a search request.",
         "properties": {
@@ -832,7 +832,7 @@
         ]
       },
       "SimulationSettings": {
-        "title": "SimulationSettings",
+        "title": "Simulation Settings",
         "type": "object",
         "properties": {
           "turnLength": {
@@ -876,7 +876,7 @@
         "description": "The object containing the settings for the simulation."
       },
       "SimulationStatus": {
-        "title": "SimulationStatus",
+        "title": "Simulation Status",
         "type": "object",
         "properties": {
           "isWhoTurn": {
