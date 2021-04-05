@@ -866,7 +866,7 @@
           },
           "subLocations": {
             "type": "array",
-            "description": "An array of sub-locations that are under this location. If not given, or empty, then there are no sub-locations.",
+            "description": "An array of sub-locations that are under this location. If not given, or empty, then there are no sub-locations.\n\nEach item in this array is another LocationDefinition object.",
             "items": {
               "$ref": "#/components/schemas/LocationDefinition"
             }
