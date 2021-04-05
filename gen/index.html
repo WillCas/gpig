@@ -1,0 +1,1051 @@
+<!doctype html>
+<html>
+  <head>
+    <title>GPIG Interface</title>
+    <style type="text/css">
+      body {
+      	font-family: Trebuchet MS, sans-serif;
+      	font-size: 15px;
+      	color: #444;
+      	margin-right: 24px;
+      }
+      
+      h1	{
+      	font-size: 25px;
+      }
+      h2	{
+      	font-size: 20px;
+      }
+      h3	{
+      	font-size: 16px;
+      	font-weight: bold;
+      }
+      hr	{
+      	height: 1px;
+      	border: 0;
+      	color: #ddd;
+      	background-color: #ddd;
+      }
+      
+      .app-desc {
+        clear: both;
+        margin-left: 20px;
+      }
+      .param-name {
+        width: 100%;
+      }
+      .license-info {
+        margin-left: 20px;
+      }
+      
+      .license-url {
+        margin-left: 20px;
+      }
+      
+      .model {
+        margin: 0 0 0px 20px;
+      }
+      
+      .method {
+        margin-left: 20px;
+      }
+      
+      .method-notes	{
+      	margin: 10px 0 20px 0;
+      	font-size: 90%;
+      	color: #555;
+      }
+      
+      pre {
+        padding: 10px;
+        margin-bottom: 2px;
+      }
+      
+      .http-method {
+       text-transform: uppercase;
+      }
+      
+      pre.get {
+        background-color: #0f6ab4;
+      }
+      
+      pre.post {
+        background-color: #10a54a;
+      }
+      
+      pre.put {
+        background-color: #c5862b;
+      }
+      
+      pre.delete {
+        background-color: #a41e22;
+      }
+      
+      .huge	{
+      	color: #fff;
+      }
+      
+      pre.example {
+        background-color: #f3f3f3;
+        padding: 10px;
+        border: 1px solid #ddd;
+      }
+      
+      code {
+        white-space: pre;
+      }
+      
+      .nickname {
+        font-weight: bold;
+      }
+      
+      .method-path {
+        font-size: 1.5em;
+        background-color: #0f6ab4;
+      }
+      
+      .up {
+        float:right;
+      }
+      
+      .parameter {
+        width: 500px;
+      }
+      
+      .param {
+        width: 500px;
+        padding: 10px 0 0 20px;
+        font-weight: bold;
+      }
+      
+      .param-desc {
+        width: 700px;
+        padding: 0 0 0 20px;
+        color: #777;
+      }
+      
+      .param-type {
+        font-style: italic;
+      }
+      
+      .param-enum-header {
+      width: 700px;
+      padding: 0 0 0 60px;
+      color: #777;
+      font-weight: bold;
+      }
+      
+      .param-enum {
+      width: 700px;
+      padding: 0 0 0 80px;
+      color: #777;
+      font-style: italic;
+      }
+      
+      .field-label {
+        padding: 0;
+        margin: 0;
+        clear: both;
+      }
+      
+      .field-items	{
+      	padding: 0 0 15px 0;
+      	margin-bottom: 15px;
+      }
+      
+      .return-type {
+        clear: both;
+        padding-bottom: 10px;
+      }
+      
+      .param-header {
+        font-weight: bold;
+      }
+      
+      .method-tags {
+        text-align: right;
+      }
+      
+      .method-tag {
+        background: none repeat scroll 0% 0% #24A600;
+        border-radius: 3px;
+        padding: 2px 10px;
+        margin: 2px;
+        color: #FFF;
+        display: inline-block;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+  <h1>GPIG Interface</h1>
+    <div class="app-desc"><p>This is the primary defintion for the GPIG interface that all teams should work from. This interface is designed from the perspective that the virus model is the server, and the WHO model is the client making requests. Extensions and modifications are allowed at the discretion of the clients.</p>
+<p>There are a number of general minimum requirements for the server that are assumed:</p>
+<ul>
+<li>Requests can support a body of up to 10MB</li>
+<li>Responses can support a body of up to 100MB</li>
+</ul>
+<p>Each 'full turn' is a complete virus -> WHO back-and-forth. This reflects a 'ply'.</p>
+</div>
+    <div class="app-desc">More information: <a href="https://helloreverb.com">https://helloreverb.com</a></div>
+    <div class="app-desc">Contact Info: <a href="hello@helloreverb.com">hello@helloreverb.com</a></div>
+    <div class="app-desc">Version: 1.0</div>
+    
+    <div class="license-info">All rights reserved</div>
+    <div class="license-url">http://apache.org/licenses/LICENSE-2.0.html</div>
+  <h2>Access</h2>
+
+  <h2><a name="__Methods">Methods</a></h2>
+  [ Jump to <a href="#__Models">Models</a> ]
+
+  <h3>Table of Contents </h3>
+  <div class="method-summary"></div>
+  <h4><a href="#Default">Default</a></h4>
+  <ul>
+  <li><a href="#getSettings"><code><span class="http-method">get</span> /settings</code></a></li>
+  <li><a href="#getStatus"><code><span class="http-method">get</span> /status</code></a></li>
+  <li><a href="#postActions"><code><span class="http-method">post</span> /actions</code></a></li>
+  <li><a href="#postInfoActorData"><code><span class="http-method">post</span> /info/actor-data</code></a></li>
+  <li><a href="#postInfoActors"><code><span class="http-method">post</span> /info/actors</code></a></li>
+  <li><a href="#postInfoHomes"><code><span class="http-method">post</span> /info/homes</code></a></li>
+  <li><a href="#postInfoTotals"><code><span class="http-method">post</span> /info/totals</code></a></li>
+  </ul>
+
+  <h1><a name="Default">Default</a></h1>
+  <div class="method"><a name="getSettings"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /settings</code></pre></div>
+    <div class="method-summary">Get simulation settings (<span class="nickname">getSettings</span>)</div>
+    <div class="method-notes">Request the current game settings.</div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SimulationSettings">SimulationSettings</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "turnLength" : {
+    "unit" : "seconds",
+    "count" : 1
+  },
+  "locations" : [ {
+    "coord" : "coord",
+    "subLocations" : [ null, null ]
+  }, {
+    "coord" : "coord",
+    "subLocations" : [ null, null ]
+  } ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    The current settings for the simulation. Once a simulation has started, this should never change.
+        <a href="#SimulationSettings">SimulationSettings</a>
+    <h4 class="field-label">500</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getStatus"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /status</code></pre></div>
+    <div class="method-summary">Get simulation status (<span class="nickname">getStatus</span>)</div>
+    <div class="method-notes">Request for the current simulation status.</div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SimulationStatus">SimulationStatus</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "isWhoTurn" : true,
+  "turnCount" : 0,
+  "budget" : 0
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    The current simulation status from the server.
+        <a href="#SimulationStatus">SimulationStatus</a>
+    <h4 class="field-label">500</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postActions"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /actions</code></pre></div>
+    <div class="method-summary">Adjust actions in batch (<span class="nickname">postActions</span>)</div>
+    <div class="method-notes"><p>Allows the creation and deletion of actions in batch. This request will only fail when the entire request does, individual actions will each have their own response objects with dedicated status codes.</p>
+<p>This means that if an action fails with the status code 400, then the HTTP request will respond with 200, however the action reponse object with the same index will contain a code of 400.</p>
+</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body  (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; The action(s) you want to create or update. </div>
+                </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#ActionResult">ActionResult</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "code" : 0,
+  "id" : 0,
+  "message" : "message"
+}, {
+  "code" : 0,
+  "id" : 0,
+  "message" : "message"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    <p>An array of action response objects.</p>
+<p>If the endpoint returns a 425 status code (too early), then every action response will have the same error code and message, and no action will be applied. This status code is only returned if an action change is requested outside of the WHO&#x27;s turn.</p>
+
+        
+    <h4 class="field-label">400</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+    <h4 class="field-label">425</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+    <h4 class="field-label">500</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postInfoActorData"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /info/actor-data</code></pre></div>
+    <div class="method-summary"> (<span class="nickname">postInfoActorData</span>)</div>
+    <div class="method-notes">Request the state of a set of actors.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#integer">integer</a> (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; The array of actor IDs to fetch the data of. If any IDs are not found, then they will be omitted from the response. </div>
+                </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#Actor">Actor</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "vulnerable" : true,
+  "location" : [ "location", "location" ],
+  "state" : "uninfected",
+  "id" : 0,
+  "age" : 0
+}, {
+  "vulnerable" : true,
+  "location" : [ "location", "location" ],
+  "state" : "uninfected",
+  "id" : 0,
+  "age" : 0
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    An array of actors.
+        
+    <h4 class="field-label">400</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+    <h4 class="field-label">500</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postInfoActors"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /info/actors</code></pre></div>
+    <div class="method-summary">Get all Actor IDs in a location (<span class="nickname">postInfoActors</span>)</div>
+    <div class="method-notes">Request for the IDs of actors that are currently in a grid location (not including those in the dead state).</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#SearchRequest">SearchRequest</a> (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+            <div class="param-desc"><span class="param-type">example: <code>{
+  &quot;value&quot; : {
+    &quot;locations&quot; : [ [ &quot;A0&quot; ] ]
+  }
+}</code></span></div>    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#ActorSearchResult">ActorSearchResult</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "actors" : [ 0, 0 ],
+  "location" : [ "location", "location" ]
+}, {
+  "actors" : [ 0, 0 ],
+  "location" : [ "location", "location" ]
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    The resonse from a search endpoint. Provides an array of search result objects in the index order of the request array.
+        
+    <h4 class="field-label">404</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+    <h4 class="field-label">418</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+    <h4 class="field-label">500</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postInfoHomes"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /info/homes</code></pre></div>
+    <div class="method-summary">Get actors who have home in location (<span class="nickname">postInfoHomes</span>)</div>
+    <div class="method-notes">Request for the IDs of actors who have homes in a grid location (including those in the dead state).</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#SearchRequest">SearchRequest</a> (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+            <div class="param-desc"><span class="param-type">example: <code>{
+  &quot;value&quot; : {
+    &quot;locations&quot; : [ [ &quot;B2&quot; ] ]
+  }
+}</code></span></div>    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#ActorSearchResult">ActorSearchResult</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "actors" : [ 0, 0 ],
+  "location" : [ "location", "location" ]
+}, {
+  "actors" : [ 0, 0 ],
+  "location" : [ "location", "location" ]
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    The resonse from a search endpoint. Provides an array of search result objects in the index order of the request array.
+        
+    <h4 class="field-label">404</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+    <h4 class="field-label">418</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+    <h4 class="field-label">500</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postInfoTotals"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /info/totals</code></pre></div>
+    <div class="method-summary">Get state totals within a location (<span class="nickname">postInfoTotals</span>)</div>
+    <div class="method-notes">Request for the total number of people in a grid location.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#SearchRequest">SearchRequest</a> (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+            <div class="param-desc"><span class="param-type">example: <code>{
+  &quot;value&quot; : {
+    &quot;locations&quot; : [ [ &quot;A1&quot;, &quot;B3&quot; ] ]
+  }
+}</code></span></div>    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#InfectionTotals">InfectionTotals</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "uninfected" : 0,
+  "asymptomaticInfectedInfectious" : 0,
+  "symptomatic" : 0,
+  "asymptomaticInfectedNotInfectious" : 0,
+  "recoveredImmune" : 0,
+  "seriousInfection" : 0,
+  "location" : [ "location", "location" ],
+  "dead" : 0
+}, {
+  "uninfected" : 0,
+  "asymptomaticInfectedInfectious" : 0,
+  "symptomatic" : 0,
+  "asymptomaticInfectedNotInfectious" : 0,
+  "recoveredImmune" : 0,
+  "seriousInfection" : 0,
+  "location" : [ "location", "location" ],
+  "dead" : 0
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    An array of infection totals each, for a requested location.
+        
+    <h4 class="field-label">404</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+    <h4 class="field-label">418</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+    <h4 class="field-label">500</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+  </div> <!-- method -->
+  <hr/>
+
+  <h2><a name="__Models">Models</a></h2>
+  [ Jump to <a href="#__Methods">Methods</a> ]
+
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#ActionBatch"><code>ActionBatch</code> - Action Batch</a></li>
+    <li><a href="#ActionCreate"><code>ActionCreate</code> - Action Create</a></li>
+    <li><a href="#ActionDelete"><code>ActionDelete</code> - Action Delete</a></li>
+    <li><a href="#ActionResult"><code>ActionResult</code> - Action Result</a></li>
+    <li><a href="#Actor"><code>Actor</code> - Actor</a></li>
+    <li><a href="#ActorIDArray"><code>ActorIDArray</code> - Actor ID Array</a></li>
+    <li><a href="#ActorSearchResult"><code>ActorSearchResult</code> - ActorSearchResult</a></li>
+    <li><a href="#CloseBordersParameters"><code>CloseBordersParameters</code> - Close Borders Parameters</a></li>
+    <li><a href="#CloseRecreationalLocationsParameters"><code>CloseRecreationalLocationsParameters</code> - Close Recreational Locations Parameters</a></li>
+    <li><a href="#CloseSchoolsParameters"><code>CloseSchoolsParameters</code> - Close Schools Parameters</a></li>
+    <li><a href="#CurfewParameters"><code>CurfewParameters</code> - Curfew Parameters</a></li>
+    <li><a href="#FailedRequest"><code>FailedRequest</code> - Failed Request</a></li>
+    <li><a href="#FurloughParameters"><code>FurloughParameters</code> - Furlough Parameters</a></li>
+    <li><a href="#HealthDriveParameters"><code>HealthDriveParameters</code> - Health Drive Parameters</a></li>
+    <li><a href="#InfectionTotals"><code>InfectionTotals</code> - InfectionTotals</a></li>
+    <li><a href="#InformationPressReleaseParameters"><code>InformationPressReleaseParameters</code> - Information Press Release Parameters</a></li>
+    <li><a href="#InvestInHealthServicesParameters"><code>InvestInHealthServicesParameters</code> - Invest In Health Services Parameters</a></li>
+    <li><a href="#InvestInVaccineParameters"><code>InvestInVaccineParameters</code> - Invest In Vaccine Parameters</a></li>
+    <li><a href="#LoanParameters"><code>LoanParameters</code> - Loan Parameters</a></li>
+    <li><a href="#LocationCoord"><code>LocationCoord</code> - LocationCoord</a></li>
+    <li><a href="#LocationCoords"><code>LocationCoords</code> - Location Coordinates</a></li>
+    <li><a href="#LocationDefinition"><code>LocationDefinition</code> - LocationDefinition</a></li>
+    <li><a href="#MaskMandateParameters"><code>MaskMandateParameters</code> - Mask Mandate Parameters</a></li>
+    <li><a href="#MovementRestrictionsParameters"><code>MovementRestrictionsParameters</code> - Movement Restrictions Parameters</a></li>
+    <li><a href="#SearchRequest"><code>SearchRequest</code> - SearchRequest</a></li>
+    <li><a href="#ShieldingProgramParameters"><code>ShieldingProgramParameters</code> - Shielding Program Parameters</a></li>
+    <li><a href="#SimulationSettings"><code>SimulationSettings</code> - SimulationSettings</a></li>
+    <li><a href="#SimulationSettings_turnLength"><code>SimulationSettings_turnLength</code></a></li>
+    <li><a href="#SimulationStatus"><code>SimulationStatus</code> - SimulationStatus</a></li>
+    <li><a href="#SocialDistancingMandateParameters"><code>SocialDistancingMandateParameters</code> - Social Distancing Mandate Parameters</a></li>
+    <li><a href="#StayAtHomeParameters"><code>StayAtHomeParameters</code> - Stay At Home Parameters</a></li>
+    <li><a href="#TestAndIsolationParameters"><code>TestAndIsolationParameters</code> - Test And Isolation Parameters</a></li>
+  </ol>
+
+  <div class="model">
+    <h3><a name="ActionBatch"><code>ActionBatch</code> - Action Batch</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>The actions you want to create or update.</div>
+    <div class="field-items">
+          </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ActionCreate"><code>ActionCreate</code> - Action Create</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The request object for creating an action.</p>
+<p>The <code>action</code> parameter has to match the corresonding <code>parameters</code> object, not doing so is an error.</p>
+</div>
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The ID of the created action. This can then be used for deletion later. format: int32</div>
+<div class="param">action </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The action kind. Each kind has a specific set of parameters that it allows. </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">testAndIsolation</div><div class="param-enum">stayAtHome</div><div class="param-enum">closeSchools</div><div class="param-enum">closeRecreationalLocations</div><div class="param-enum">shieldingProgram</div><div class="param-enum">movementRestrictions</div><div class="param-enum">closeBorders</div><div class="param-enum">investInVaccine</div><div class="param-enum">furlough</div><div class="param-enum">infoPressRelease</div><div class="param-enum">loan</div><div class="param-enum">maskMandate</div><div class="param-enum">socialDistancingMandate</div><div class="param-enum">curfew</div><div class="param-enum">healthDrive</div><div class="param-enum">investInHealthServices</div>
+<div class="param">mode </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> What change will be made to the action. For creation, this property always has to be &#x27;create&#x27;. </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">create</div>
+<div class="param">parameters </div><div class="param-desc"><span class="param-type"><a href="#"></a></span> The parameters of the action. This object has to match with the corresponding action kind. </div>
+      <div class="param-desc"><span class="param-type">oneOf:</span>
+              <a href="#TestAndIsolationParameters"><code>TestAndIsolationParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#StayAtHomeParameters"><code>StayAtHomeParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#CloseSchoolsParameters"><code>CloseSchoolsParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#CloseRecreationalLocationsParameters"><code>CloseRecreationalLocationsParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#ShieldingProgramParameters"><code>ShieldingProgramParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#MovementRestrictionsParameters"><code>MovementRestrictionsParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#CloseBordersParameters"><code>CloseBordersParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#InvestInVaccineParameters"><code>InvestInVaccineParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#FurloughParameters"><code>FurloughParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#InformationPressReleaseParameters"><code>InformationPressReleaseParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#LoanParameters"><code>LoanParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#MaskMandateParameters"><code>MaskMandateParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#HealthDriveParameters"><code>HealthDriveParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#InvestInHealthServicesParameters"><code>InvestInHealthServicesParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#SocialDistancingMandateParameters"><code>SocialDistancingMandateParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#CurfewParameters"><code>CurfewParameters</code></a>&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ActionDelete"><code>ActionDelete</code> - Action Delete</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>The request object for deleting an action.</div>
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The ID of the action to delete. format: int32</div>
+<div class="param">mode </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> What change will be made to the action. For deletion, this property always has to be &#x27;delete&#x27;. </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">delete</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ActionResult"><code>ActionResult</code> - Action Result</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The result object of an action.</p>
+<p>If an action was sent with a coordinate that does not exist, then this response will have the code 404, and the action will not be applied.</p>
+<p>If an action failed to apply (i.e. that action has not been applied to the server), then the reponse will have the code 500. If an action has been <em>partially</em> applied, then these changes must be undone by the server before the response is sent.</p>
+</div>
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The ID of the action that was adjusted. This will match the ID that was sent. format: int32</div>
+<div class="param">code </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The response code for the action adjustment. This uses standard HTTP response codes. (e.g. 200 for success, 404 for an invalid location, etc.) format: int32</div>
+<div class="param">message (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> A message containing information about the request reponse. Typically used for debug information in the case of non 2xx status codes. </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Actor"><code>Actor</code> - Actor</a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">state </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The current infection state of the actor. </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">uninfected</div><div class="param-enum">asymptomaticInfectedNotInfectious</div><div class="param-enum">asymptomaticInfectedInfectious</div><div class="param-enum">symptomatic</div><div class="param-enum">seriousInfection</div><div class="param-enum">dead</div><div class="param-enum">recoveredImmune</div>
+<div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+<div class="param">home </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+<div class="param">age </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The age of the actor in years. format: int32</div>
+<div class="param">vulnerable </div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> A flag for whether the actor is considered clinically vulnerable. </div>
+<div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The ID of the actor. This is unique for each actor. format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ActorIDArray"><code>ActorIDArray</code> - Actor ID Array</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>An array of actor IDs.</div>
+    <div class="field-items">
+          </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ActorSearchResult"><code>ActorSearchResult</code> - ActorSearchResult</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>The object containing the result from an actor search. Provides both the location the search was done against, and all of the IDs of the actors that match the search.</div>
+    <div class="field-items">
+      <div class="param">actors </div><div class="param-desc"><span class="param-type"><a href="#ActorIDArray">ActorIDArray</a></span>  </div>
+<div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CloseBordersParameters"><code>CloseBordersParameters</code> - Close Borders Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>closeBorders</code> action.</p>
+<p>Action: Stop all movement between one location and all others.</p>
+</div>
+    <div class="field-items">
+      <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CloseRecreationalLocationsParameters"><code>CloseRecreationalLocationsParameters</code> - Close Recreational Locations Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>closeRecreationalLocations</code> action.</p>
+<p>Action: Close all recreational facilities in the given location and prevent mixing of people and households in these locations.</p>
+</div>
+    <div class="field-items">
+      <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CloseSchoolsParameters"><code>CloseSchoolsParameters</code> - Close Schools Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>closeSchools</code> action.</p>
+<p>Action: Close all schools in the given location and prevent school-age people from mixing at school.</p>
+</div>
+    <div class="field-items">
+      <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="CurfewParameters"><code>CurfewParameters</code> - Curfew Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>curfew</code> action.</p>
+<p>Action: Introduce a curfew to require the public to not go into public places past a certain time, reducing socialisation and use of recreational businesses.</p>
+</div>
+    <div class="field-items">
+      <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FailedRequest"><code>FailedRequest</code> - Failed Request</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>The object returned in the case that a request failed for any reason.</div>
+    <div class="field-items">
+      <div class="param">code </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The status code of the request. Will always be 4xx or 5xx, as reponse is only used in these conditions. format: int32</div>
+<div class="param">message (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> A message containing extra information on what went wrong. </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="FurloughParameters"><code>FurloughParameters</code> - Furlough Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters to the <code>furlough</code> action.</p>
+<p>Action: Provide monetary support to those who are not able to work due to the contagion, propping up businesses that are not viable during the pandemic.</p>
+<ul>
+<li>Reduces the number of people going to work</li>
+<li>Higher amount results in higher budget cost</li>
+<li>If used in combination with action 2 or 4, that action&#x27;s GDP cost is reduced</li>
+</ul>
+</div>
+    <div class="field-items">
+      <div class="param">amountInvested </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Amount invested per working person. </div>
+<div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="HealthDriveParameters"><code>HealthDriveParameters</code> - Health Drive Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>healthDrive</code> action.</p>
+<p>Action: Attempt to improve the health of people via things like exercise and healthy eating to try and improve the base well-being of the population.</p>
+</div>
+    <div class="field-items">
+      <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="InfectionTotals"><code>InfectionTotals</code> - InfectionTotals</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>Provides the number of people in each infection state in a given location.</div>
+    <div class="field-items">
+      <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+<div class="param">uninfected </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of people who have never come into contact with the virus. format: int32</div>
+<div class="param">asymptomaticInfectedNotInfectious </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of people who have contracted the virus, but are not showing symptoms, nor are capable of spreading it. format: int32</div>
+<div class="param">asymptomaticInfectedInfectious </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of people who have contracted the virus, are not showing symptoms, but are able to spread it to others. format: int32</div>
+<div class="param">symptomatic </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of people who have contracted the virus and are showing symptoms of it. They can also spread it to others. format: int32</div>
+<div class="param">seriousInfection </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of people who have been hospitalised due to the virus. format: int32</div>
+<div class="param">dead </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of people who have died due to the virus. format: int32</div>
+<div class="param">recoveredImmune </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Number of people who have contracted the virus, but have fully recovered and are not able to spread it or re-contract it. format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="InformationPressReleaseParameters"><code>InformationPressReleaseParameters</code> - Information Press Release Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters to the <code>infoPressRelease</code> action.</p>
+<p>Action: Press-releases to improve morale/disseminate information, which could have a negative effect if it goes wrong and are produced every set unit of time.</p>
+<ul>
+<li>Increase awareness</li>
+<li>Probably increase public opinion</li>
+<li>Implementation can change the amount this increases (minimum of 0 increase)</li>
+<li>Implementation can alter how much the improvement is based on number of previous press releases</li>
+</ul>
+</div>
+    <div class="field-items">
+      <div class="param">amountInvested </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Amount invested in total. </div>
+<div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="InvestInHealthServicesParameters"><code>InvestInHealthServicesParameters</code> - Invest In Health Services Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>investInHealthServices</code> action.</p>
+<p>Action: Increase investment in health services. Improves health services response to contagion.</p>
+</div>
+    <div class="field-items">
+      <div class="param">amountInvested </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Amount invested in total. Higher amount will result in deminising returns. format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="InvestInVaccineParameters"><code>InvestInVaccineParameters</code> - Invest In Vaccine Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters to the <code>investInVaccine</code> action.</p>
+<p>Action: Work towards producing a vaccine for the contagion. A vaccine is produced once US$80 million has been invested in the production of a vaccine, at this point further investment will lead to subsequent vaccines being produced via the same process. The produced vaccine will be as described in section 8 of the GPIG Cross-Team Competition Rules.</p>
+</div>
+    <div class="field-items">
+      <div class="param">amountInvested </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Amount invested for this turn. </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="LoanParameters"><code>LoanParameters</code> - Loan Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters to the <code>loan</code> action.</p>
+<p>Action: Allow the WHO to take additional Budget for situations in which they run out of money. Negative effects of taking a loan are considered too long term or otherwise out of scope</p>
+<ul>
+<li>Reduction in Score</li>
+<li>Increase in Budget for the following turn (Lump sum)</li>
+</ul>
+</div>
+    <div class="field-items">
+      <div class="param">amountLoaned </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> Total amount to be loaned to the WHO. </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="LocationCoord"><code>LocationCoord</code> - LocationCoord</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>A single coordinate for a location.</div>
+    <div class="field-items">
+          </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="LocationCoords"><code>LocationCoords</code> - Location Coordinates</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The coordinate array targeting a given location.</p>
+<p>Coordinates are a reference to a specific grid and sub-grid in increasing in specificity. The grid is a conceptual overlay over the map to enable an abstract method of referencing sections of the map. Due to a lack of official documentation on how grid coordinates function, they are up for interpretation for specific usage in implementations.</p>
+</div>
+    <div class="field-items">
+          </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="LocationDefinition"><code>LocationDefinition</code> - LocationDefinition</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>A definition for a given location that is available.</div>
+    <div class="field-items">
+      <div class="param">coord </div><div class="param-desc"><span class="param-type"><a href="#LocationCoord">LocationCoord</a></span>  </div>
+<div class="param">subLocations (optional)</div><div class="param-desc"><span class="param-type"><a href="#LocationDefinition">array[LocationDefinition]</a></span> <p>An array of sub-locations that are under this location. If not given, or empty, then there are no sub-locations.</p>
+<p>Each item in this array is another LocationDefinition object.</p>
+ </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="MaskMandateParameters"><code>MaskMandateParameters</code> - Mask Mandate Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>maskMandate</code> action.</p>
+<p>Action: Require people to wear masks while in public to reduce the spread of the contagion.</p>
+</div>
+    <div class="field-items">
+      <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+<div class="param">maskProvisionLevel </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The level at which to provision masks for public use. 0 is no provisioning at all, 1 is low-quality mask provisioning, and 2 is high-quality mask provisioning. format: int32</div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">0</div><div class="param-enum">1</div><div class="param-enum">2</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="MovementRestrictionsParameters"><code>MovementRestrictionsParameters</code> - Movement Restrictions Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>movementRestrictions</code> action.</p>
+<p>Action: Stop people from travelling a certain distance away from their household.</p>
+</div>
+    <div class="field-items">
+      <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+<div class="param">distance </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The distance in terms of the lowest-level grid size. format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SearchRequest"><code>SearchRequest</code> - SearchRequest</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>An object providing details for a search request.</div>
+    <div class="field-items">
+      <div class="param">locations </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">array[LocationCoords]</a></span> The array of coordinates to search. </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ShieldingProgramParameters"><code>ShieldingProgramParameters</code> - Shielding Program Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>shieldingProgram</code> action.</p>
+<p>Action: Instruct people to isolate to reduce chance of catching contagion.</p>
+</div>
+    <div class="field-items">
+      <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+<div class="param">vulnerablePeople (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> If true, clinically vulnerable people will be required to shield. If not given, defaults to false. </div>
+<div class="param">ageThreshold (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> If given, people equal or over the threshold will be required to shield. If not given, or set to <code>null</code>, then age is ignored for shielding. format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SimulationSettings"><code>SimulationSettings</code> - SimulationSettings</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>The object containing the settings for the simulation.</div>
+    <div class="field-items">
+      <div class="param">turnLength (optional)</div><div class="param-desc"><span class="param-type"><a href="#SimulationSettings_turnLength">SimulationSettings_turnLength</a></span>  </div>
+<div class="param">locations </div><div class="param-desc"><span class="param-type"><a href="#LocationDefinition">array[LocationDefinition]</a></span> An array of all top-level locations that are available on the map. </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SimulationSettings_turnLength"><code>SimulationSettings_turnLength</code></a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>An object stating how much in-simulation time will pass for each full turn.</div>
+    <div class="field-items">
+      <div class="param">unit </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The unit of time to measure in. </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">seconds</div><div class="param-enum">minutes</div><div class="param-enum">hours</div><div class="param-enum">days</div>
+<div class="param">count </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The amount of unit of time each turn consists of. format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SimulationStatus"><code>SimulationStatus</code> - SimulationStatus</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>The object containing the status of the simulation.</div>
+    <div class="field-items">
+      <div class="param">isWhoTurn </div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> Whether it is currently the turn of the WHO model. </div>
+<div class="param">turnCount </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The amount of full turns (i.e. virus-&amp;gt;who) that have completed. For the first full turn, this number is set to zero, and it should be incremented by 1 upon WHO turn end. format: int32</div>
+<div class="param">budget </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The total budget the WHO has for the current turn. This can only be considered valid when <code>isWhoTurn</code> is <code>true</code>. format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SocialDistancingMandateParameters"><code>SocialDistancingMandateParameters</code> - Social Distancing Mandate Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>socialDistancingMadate</code> action.</p>
+<p>Action: Introduce social distancing rules to reduce the spread caused by proximity to others in public places. Subject to disobedience.</p>
+</div>
+    <div class="field-items">
+      <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+<div class="param">distance (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The distance in terms of the lowest-level grid size. format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="StayAtHomeParameters"><code>StayAtHomeParameters</code> - Stay At Home Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>stayAtHome</code> action.</p>
+<p>Action: Begin a stay-at-home order for the given location that prevents people from leaving their residence except for necessary reasons (exercise/shopping/etc).</p>
+</div>
+    <div class="field-items">
+      <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="TestAndIsolationParameters"><code>TestAndIsolationParameters</code> - Test And Isolation Parameters</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>testAndIsolation</code> action.</p>
+<p>Action: Starts a test-and-isolation program in an area using the given budget that will test symptomatic people or any person who requests, and any who return positive are automatically recommended to self-isolate.</p>
+</div>
+    <div class="field-items">
+      <div class="param">testQuality </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The quality level of the tests used. 0 is low-quality, 1 is high-quality. </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">0</div><div class="param-enum">1</div>
+<div class="param">quarantinePeriod </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The period of time a person is asked to self-isolate in day after receiving a positive result. format: int32</div>
+<div class="param">quantity </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The quantity of tests requested. format: int32</div>
+<div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+<div class="param">symptomaticOnly </div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> Whether to test symptomatic people only. </div>
+    </div>  <!-- field-items -->
+  </div>
+  </body>
+</html>

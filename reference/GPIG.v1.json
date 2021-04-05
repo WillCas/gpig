@@ -558,7 +558,7 @@
       "FurloughParameters": {
         "title": "Furlough Parameters",
         "type": "object",
-        "description": "The parameters to the `furlough` action.\n\nAction: Provide monetary support to those who are not able to work due to the contagion, propping up businesses that are not viable during the pandemic.\n\n- Reduces the number of people going to work\n- Higher amount results in higher budget cost\n- If used in combination with action 2 or 4, that action’s GDP cost is reduced\n",
+        "description": "The parameters to the `furlough` action.\n\nAction: Provide monetary support to those who are not able to work due to the contagion, propping up businesses that are not viable during the pandemic.\n\n- Reduces the number of people going to work\n- Higher amount results in higher budget cost\n- If used in combination with action 2 or 4, that action's GDP cost is reduced\n",
         "properties": {
           "amountInvested": {
             "type": "integer",
