@@ -37,12 +37,7 @@
               "examples": {
                 "example": {
                   "value": {
-                    "locations": [
-                      [
-                        "A1",
-                        "B3"
-                      ]
-                    ]
+                    "locations": [["A1", "B3"]]
                   }
                 }
               }
@@ -81,11 +76,7 @@
               "examples": {
                 "example": {
                   "value": {
-                    "locations": [
-                      [
-                        "A0"
-                      ]
-                    ]
+                    "locations": [["A0"]]
                   }
                 }
               }
@@ -124,11 +115,7 @@
               "examples": {
                 "example": {
                   "value": {
-                    "locations": [
-                      [
-                        "B2"
-                      ]
-                    ]
+                    "locations": [["B2"]]
                   }
                 }
               }
@@ -237,69 +224,21 @@
   },
   "components": {
     "schemas": {
-      "InvestInVaccineParameters": {
-        "title": "Invest In Vaccine Parameters",
-        "type": "object",
-        "description": "The parameters to the `investInVaccine` action.\n\nAction: Work towards producing a vaccine for the contagion. A vaccine is produced once US$80 million has been invested in the production of a vaccine, at this point further investment will lead to subsequent vaccines being produced via the same process. The produced vaccine will be as described in section 8 of the GPIG Cross-Team Competition Rules.",
-        "properties": {
-          "amountInvested": {
-            "type": "integer",
-            "description": "Amount invested for this turn."
-          }
-        },
-        "required": [
-          "amountInvested"
-        ]
-      },
-      "FurloughParameters": {
-        "title": "Furlough Parameters",
-        "type": "object",
-        "description": "The parameters to the `furlough` action.\n\nAction: Provide monetary support to those who are not able to work due to the contagion, propping up businesses that are not viable during the pandemic.\n\n- Reduces the number of people going to work\n- Higher amount results in higher budget cost\n- If used in combination with action 2 or 4, that action’s GDP cost is reduced\n",
-        "properties": {
-          "amountInvested": {
-            "type": "integer",
-            "description": "Amount invested per working person."
-          },
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
-          }
-        },
-        "required": [
-          "amountInvested",
-          "location"
-        ]
-      },
-      "InformationPressReleaseParameters": {
-        "title": "Information Press Release Parameters",
-        "type": "object",
-        "description": "The parameters to the `infoPressRelease` action.\n\nAction: Press-releases to improve morale/disseminate information, which could have a negative effect if it goes wrong and are produced every set unit of time.\n\n- Increase awareness\n- Probably increase public opinion\n- Implementation can change the amount this increases (minimum of 0 increase)\n- Implementation can alter how much the improvement is based on number of previous press releases",
-        "properties": {
-          "amountInvested": {
-            "type": "integer",
-            "description": "Amount invested in total."
-          },
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
-          }
-        },
-        "required": [
-          "amountInvested",
-          "location"
-        ]
-      },
-      "LoanParameters": {
-        "title": "Loan Parameters",
-        "type": "object",
-        "description": "The parameters to the `loan` action.\n\nAction: Allow the WHO to take additional Budget for situations in which they run out of money. Negative effects of taking a loan are considered too long term or otherwise out of scope\n\n- Reduction in Score\n- Increase in Budget for the following turn (Lump sum)\n",
-        "properties": {
-          "amountLoaned": {
-            "type": "integer",
-            "description": "Total amount to be loaned to the WHO."
-          }
-        },
-        "required": [
-          "amountLoaned"
-        ]
+      "ActionBatch": {
+        "title": "Action Batch",
+        "description": "The actions you want to create or update.",
+        "type": "array",
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/ActionCreate"
+            },
+            {
+              "$ref": "#/components/schemas/ActionDelete"
+            }
+          ],
+          "description": "Any number of create/delete actions are allowed."
+        }
       },
       "ActionCreate": {
         "title": "Action Create",
@@ -336,9 +275,7 @@
           },
           "mode": {
             "type": "string",
-            "enum": [
-              "create"
-            ],
+            "enum": ["create"],
             "description": "What change will be made to the action. For creation, this property always has to be 'create'."
           },
           "parameters": {
@@ -395,101 +332,7 @@
             "description": "The parameters of the action. This object has to match with the corresponding action kind."
           }
         },
-        "required": [
-          "id",
-          "action",
-          "mode",
-          "parameters"
-        ]
-      },
-      "TestAndIsolationParameters": {
-        "title": "Test And Isolation Parameters",
-        "type": "object",
-        "description": "The parameters for the `testAndIsolation` action.\n\nAction: Starts a test-and-isolation program in an area using the given budget that will test symptomatic people or any person who requests, and any who return positive are automatically recommended to self-isolate.",
-        "properties": {
-          "testQuality": {
-            "type": "integer",
-            "description": "The quality level of the tests used. 0 is low-quality, 1 is high-quality.",
-            "enum": [
-              0,
-              1
-            ]
-          },
-          "quarantinePeriod": {
-            "type": "integer",
-            "format": "int32",
-            "minimum": 0,
-            "description": "The period of time a person is asked to self-isolate in day after receiving a positive result."
-          },
-          "quantity": {
-            "type": "integer",
-            "format": "int32",
-            "minimum": 0,
-            "description": "The quantity of tests requested."
-          },
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
-          },
-          "symptomaticOnly": {
-            "type": "boolean",
-            "description": "Whether to test symptomatic people only."
-          }
-        },
-        "required": [
-          "testQuality",
-          "quarantinePeriod",
-          "quantity",
-          "location",
-          "symptomaticOnly"
-        ]
-      },
-      "LocationCoords": {
-        "type": "array",
-        "title": "Location Coordinates",
-        "description": "The coordinate array targeting a given location.\n\nCoordinates are a reference to a specific grid and sub-grid in increasing in specificity. The grid is a conceptual overlay over the map to enable an abstract method of referencing sections of the map. Due to a lack of official documentation on how grid coordinates function, they are up for interpretation for specific usage in implementations.",
-        "minItems": 1,
-        "items": {
-          "$ref": "#/components/schemas/LocationCoord"
-        }
-      },
-      "StayAtHomeParameters": {
-        "title": "Stay At Home Parameters",
-        "type": "object",
-        "description": "The parameters for the `stayAtHome` action.\n\nAction: Begin a stay-at-home order for the given location that prevents people from leaving their residence except for necessary reasons (exercise/shopping/etc).",
-        "properties": {
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
-          }
-        },
-        "required": [
-          "location"
-        ]
-      },
-      "CloseSchoolsParameters": {
-        "title": "Close Schools Parameters",
-        "type": "object",
-        "description": "The parameters for the `closeSchools` action.\n\nAction: Close all schools in the given location and prevent school-age people from mixing at school.",
-        "properties": {
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
-          }
-        },
-        "required": [
-          "location"
-        ]
-      },
-      "CloseRecreationalLocationsParameters": {
-        "title": "Close Recreational Locations Parameters",
-        "type": "object",
-        "description": "The parameters for the `closeRecreationalLocations` action.\n\nAction: Close all recreational facilities in the given location and prevent mixing of people and households in these locations.",
-        "properties": {
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
-          }
-        },
-        "required": [
-          "location"
-        ]
+        "required": ["id", "action", "mode", "parameters"]
       },
       "ActionDelete": {
         "title": "Action Delete",
@@ -505,158 +348,34 @@
           "mode": {
             "type": "string",
             "description": "What change will be made to the action. For deletion, this property always has to be 'delete'.",
-            "enum": [
-              "delete"
-            ]
+            "enum": ["delete"]
           }
         },
-        "required": [
-          "id",
-          "mode"
-        ]
+        "required": ["id", "mode"]
       },
-      "ShieldingProgramParameters": {
-        "title": "Shielding Program Parameters",
+      "ActionResult": {
+        "title": "Action Result",
         "type": "object",
-        "description": "The parameters for the `shieldingProgram` action.\n\nAction: Instruct people to isolate to reduce chance of catching contagion.",
         "properties": {
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
-          },
-          "vulnerablePeople": {
-            "type": "boolean",
-            "default": false,
-            "description": "If true, clinically vulnerable people will be required to shield. If not given, defaults to false."
-          },
-          "ageThreshold": {
-            "type": "integer",
-            "description": "If given, people equal or over the threshold will be required to shield. If not given, or set to `null`, then age is ignored for shielding.",
-            "format": "int32",
-            "minimum": 0,
-            "nullable": true
-          }
-        },
-        "required": [
-          "location"
-        ]
-      },
-      "MovementRestrictionsParameters": {
-        "title": "Movement Restrictions Parameters",
-        "type": "object",
-        "description": "The parameters for the `movementRestrictions` action.\n\nAction: Stop people from travelling a certain distance away from their household.",
-        "properties": {
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
-          },
-          "distance": {
+          "id": {
             "type": "integer",
             "format": "int32",
             "minimum": 0,
-            "description": "The distance in terms of the lowest-level grid size."
-          }
-        },
-        "required": [
-          "location",
-          "distance"
-        ]
-      },
-      "CloseBordersParameters": {
-        "title": "Close Borders Parameters",
-        "type": "object",
-        "properties": {
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
-          }
-        },
-        "required": [
-          "location"
-        ],
-        "description": "The parameters for the `closeBorders` action.\n\nAction: Stop all movement between one location and all others."
-      },
-      "MaskMandateParameters": {
-        "title": "Mask Mandate Parameters",
-        "type": "object",
-        "description": "The parameters for the `maskMandate` action.\n\nAction: Require people to wear masks while in public to reduce the spread of the contagion.",
-        "properties": {
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
+            "description": "The ID of the action that was adjusted. This will match the ID that was sent."
           },
-          "maskProvisionLevel": {
-            "type": "integer",
-            "format": "int32",
-            "enum": [
-              0,
-              1,
-              2
-            ],
-            "description": "The level at which to provision masks for public use. 0 is no provisioning at all, 1 is low-quality mask provisioning, and 2 is high-quality mask provisioning."
-          }
-        },
-        "required": [
-          "location",
-          "maskProvisionLevel"
-        ]
-      },
-      "HealthDriveParameters": {
-        "title": "Health Drive Parameters",
-        "type": "object",
-        "description": "The parameters for the `healthDrive` action.\n\nAction: Attempt to improve the health of people via things like exercise and healthy eating to try and improve the base well-being of the population.",
-        "properties": {
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
-          }
-        },
-        "required": [
-          "location"
-        ]
-      },
-      "InvestInHealthServicesParameters": {
-        "title": "Invest In Health Services Parameters",
-        "type": "object",
-        "description": "The parameters for the `investInHealthServices` action.\n\nAction: Increase investment in health services. Improves health services response to contagion.",
-        "properties": {
-          "amountInvested": {
+          "code": {
             "type": "integer",
             "format": "int32",
             "minimum": 0,
-            "description": "Amount invested in total. Higher amount will result in deminising returns."
-          }
-        },
-        "required": [
-          "amountInvested"
-        ]
-      },
-      "SocialDistancingMandateParameters": {
-        "title": "Social Distancing Mandate Parameters",
-        "type": "object",
-        "description": "The parameters for the `socialDistancingMadate` action.\n\nAction: Introduce social distancing rules to reduce the spread caused by proximity to others in public places. Subject to disobedience.",
-        "properties": {
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
+            "description": "The response code for the action adjustment. This uses standard HTTP response codes. (e.g. 200 for success, 404 for an invalid location, etc.)"
           },
-          "distance": {
-            "type": "integer",
-            "format": "int32",
-            "minimum": 0,
-            "description": "The distance in terms of the lowest-level grid size."
+          "message": {
+            "type": "string",
+            "description": "A message containing information about the request reponse. Typically used for debug information in the case of non 2xx status codes."
           }
         },
-        "required": [
-          "location"
-        ]
-      },
-      "CurfewParameters": {
-        "title": "Curfew Parameters",
-        "type": "object",
-        "description": "The parameters for the `curfew` action.\n\nAction: Introduce a curfew to require the public to not go into public places past a certain time, reducing socialisation and use of recreational businesses.",
-        "properties": {
-          "location": {
-            "$ref": "#/components/schemas/LocationCoords"
-          }
-        },
-        "required": [
-          "location"
-        ]
+        "required": ["id", "code"],
+        "description": "The result object of an action.\n\nIf an action was sent with a coordinate that does not exist, then this response will have the code 404, and the action will not be applied.\n\nIf an action failed to apply (i.e. that action has not been applied to the server), then the reponse will have the code 500. If an action has been _partially_ applied, then these changes must be undone by the server before the response is sent."
       },
       "Actor": {
         "title": "Actor",
@@ -698,31 +417,7 @@
             "description": "The ID of the actor. This is unique for each actor."
           }
         },
-        "required": [
-          "state",
-          "location",
-          "home",
-          "age",
-          "vulnerable",
-          "id"
-        ]
-      },
-      "SearchRequest": {
-        "title": "SearchRequest",
-        "type": "object",
-        "description": "An object providing details for a search request.",
-        "properties": {
-          "locations": {
-            "description": "The array of coordinates to search.",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LocationCoords"
-            }
-          }
-        },
-        "required": [
-          "locations"
-        ]
+        "required": ["state", "location", "home", "age", "vulnerable", "id"]
       },
       "ActorIDArray": {
         "title": "Actor ID Array",
@@ -733,49 +428,6 @@
           "minimum": 0
         },
         "description": "An array of actor IDs."
-      },
-      "ActionBatch": {
-        "title": "Action Batch",
-        "description": "The actions you want to create or update.",
-        "type": "array",
-        "items": {
-          "anyOf": [
-            {
-              "$ref": "#/components/schemas/ActionCreate"
-            },
-            {
-              "$ref": "#/components/schemas/ActionDelete"
-            }
-          ],
-          "description": "Any number of create/delete actions are allowed."
-        }
-      },
-      "ActionResult": {
-        "title": "Action Result",
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32",
-            "minimum": 0,
-            "description": "The ID of the action that was adjusted. This will match the ID that was sent."
-          },
-          "code": {
-            "type": "integer",
-            "format": "int32",
-            "minimum": 0,
-            "description": "The response code for the action adjustment. This uses standard HTTP response codes. (e.g. 200 for success, 404 for an invalid location, etc.)"
-          },
-          "message": {
-            "type": "string",
-            "description": "A message containing information about the request reponse. Typically used for debug information in the case of non 2xx status codes."
-          }
-        },
-        "required": [
-          "id",
-          "code"
-        ],
-        "description": "The result object of an action.\n\nIf an action was sent with a coordinate that does not exist, then this response will have the code 404, and the action will not be applied.\n\nIf an action failed to apply (i.e. that action has not been applied to the server), then the reponse will have the code 500. If an action has been _partially_ applied, then these changes must be undone by the server before the response is sent."
       },
       "ActorSearchResult": {
         "title": "ActorSearchResult",
@@ -789,10 +441,77 @@
             "$ref": "#/components/schemas/LocationCoords"
           }
         },
-        "required": [
-          "actors",
-          "location"
-        ]
+        "required": ["actors", "location"]
+      },
+      "CloseBordersParameters": {
+        "title": "Close Borders Parameters",
+        "type": "object",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": ["location"],
+        "description": "The parameters for the `closeBorders` action.\n\nAction: Stop all movement between one location and all others."
+      },
+      "CloseRecreationalLocationsParameters": {
+        "title": "Close Recreational Locations Parameters",
+        "type": "object",
+        "description": "The parameters for the `closeRecreationalLocations` action.\n\nAction: Close all recreational facilities in the given location and prevent mixing of people and households in these locations.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": ["location"]
+      },
+      "CloseSchoolsParameters": {
+        "title": "Close Schools Parameters",
+        "type": "object",
+        "description": "The parameters for the `closeSchools` action.\n\nAction: Close all schools in the given location and prevent school-age people from mixing at school.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": ["location"]
+      },
+      "CurfewParameters": {
+        "title": "Curfew Parameters",
+        "type": "object",
+        "description": "The parameters for the `curfew` action.\n\nAction: Introduce a curfew to require the public to not go into public places past a certain time, reducing socialisation and use of recreational businesses.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": ["location"]
+      },
+      "FurloughParameters": {
+        "title": "Furlough Parameters",
+        "type": "object",
+        "description": "The parameters to the `furlough` action.\n\nAction: Provide monetary support to those who are not able to work due to the contagion, propping up businesses that are not viable during the pandemic.\n\n- Reduces the number of people going to work\n- Higher amount results in higher budget cost\n- If used in combination with action 2 or 4, that action’s GDP cost is reduced\n",
+        "properties": {
+          "amountInvested": {
+            "type": "integer",
+            "description": "Amount invested per working person."
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": ["amountInvested", "location"]
+      },
+      "HealthDriveParameters": {
+        "title": "Health Drive Parameters",
+        "type": "object",
+        "description": "The parameters for the `healthDrive` action.\n\nAction: Attempt to improve the health of people via things like exercise and healthy eating to try and improve the base well-being of the population.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": ["location"]
       },
       "InfectionTotals": {
         "title": "InfectionTotals",
@@ -856,6 +575,74 @@
           "recoveredImmune"
         ]
       },
+      "InformationPressReleaseParameters": {
+        "title": "Information Press Release Parameters",
+        "type": "object",
+        "description": "The parameters to the `infoPressRelease` action.\n\nAction: Press-releases to improve morale/disseminate information, which could have a negative effect if it goes wrong and are produced every set unit of time.\n\n- Increase awareness\n- Probably increase public opinion\n- Implementation can change the amount this increases (minimum of 0 increase)\n- Implementation can alter how much the improvement is based on number of previous press releases",
+        "properties": {
+          "amountInvested": {
+            "type": "integer",
+            "description": "Amount invested in total."
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": ["amountInvested", "location"]
+      },
+      "InvestInHealthServicesParameters": {
+        "title": "Invest In Health Services Parameters",
+        "type": "object",
+        "description": "The parameters for the `investInHealthServices` action.\n\nAction: Increase investment in health services. Improves health services response to contagion.",
+        "properties": {
+          "amountInvested": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "Amount invested in total. Higher amount will result in deminising returns."
+          }
+        },
+        "required": ["amountInvested"]
+      },
+      "InvestInVaccineParameters": {
+        "title": "Invest In Vaccine Parameters",
+        "type": "object",
+        "description": "The parameters to the `investInVaccine` action.\n\nAction: Work towards producing a vaccine for the contagion. A vaccine is produced once US$80 million has been invested in the production of a vaccine, at this point further investment will lead to subsequent vaccines being produced via the same process. The produced vaccine will be as described in section 8 of the GPIG Cross-Team Competition Rules.",
+        "properties": {
+          "amountInvested": {
+            "type": "integer",
+            "description": "Amount invested for this turn."
+          }
+        },
+        "required": ["amountInvested"]
+      },
+      "LoanParameters": {
+        "title": "Loan Parameters",
+        "type": "object",
+        "description": "The parameters to the `loan` action.\n\nAction: Allow the WHO to take additional Budget for situations in which they run out of money. Negative effects of taking a loan are considered too long term or otherwise out of scope\n\n- Reduction in Score\n- Increase in Budget for the following turn (Lump sum)\n",
+        "properties": {
+          "amountLoaned": {
+            "type": "integer",
+            "description": "Total amount to be loaned to the WHO."
+          }
+        },
+        "required": ["amountLoaned"]
+      },
+      "LocationCoord": {
+        "type": "string",
+        "title": "LocationCoord",
+        "pattern": "^[A-Z][0-9]+$",
+        "description": "A single coordinate for a location."
+      },
+      "LocationCoords": {
+        "type": "array",
+        "title": "Location Coordinates",
+        "description": "The coordinate array targeting a given location.\n\nCoordinates are a reference to a specific grid and sub-grid in increasing in specificity. The grid is a conceptual overlay over the map to enable an abstract method of referencing sections of the map. Due to a lack of official documentation on how grid coordinates function, they are up for interpretation for specific usage in implementations.",
+        "minItems": 1,
+        "items": {
+          "$ref": "#/components/schemas/LocationCoord"
+        }
+      },
       "LocationDefinition": {
         "title": "LocationDefinition",
         "type": "object",
@@ -872,15 +659,145 @@
             }
           }
         },
-        "required": [
-          "coord"
-        ]
+        "required": ["coord"]
       },
-      "LocationCoord": {
-        "type": "string",
-        "title": "LocationCoord",
-        "pattern": "^[A-Z][0-9]+$",
-        "description": "A single coordinate for a location."
+      "MaskMandateParameters": {
+        "title": "Mask Mandate Parameters",
+        "type": "object",
+        "description": "The parameters for the `maskMandate` action.\n\nAction: Require people to wear masks while in public to reduce the spread of the contagion.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "maskProvisionLevel": {
+            "type": "integer",
+            "format": "int32",
+            "enum": [0, 1, 2],
+            "description": "The level at which to provision masks for public use. 0 is no provisioning at all, 1 is low-quality mask provisioning, and 2 is high-quality mask provisioning."
+          }
+        },
+        "required": ["location", "maskProvisionLevel"]
+      },
+      "MovementRestrictionsParameters": {
+        "title": "Movement Restrictions Parameters",
+        "type": "object",
+        "description": "The parameters for the `movementRestrictions` action.\n\nAction: Stop people from travelling a certain distance away from their household.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "distance": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The distance in terms of the lowest-level grid size."
+          }
+        },
+        "required": ["location", "distance"]
+      },
+      "SearchRequest": {
+        "title": "SearchRequest",
+        "type": "object",
+        "description": "An object providing details for a search request.",
+        "properties": {
+          "locations": {
+            "description": "The array of coordinates to search.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocationCoords"
+            }
+          }
+        },
+        "required": ["locations"]
+      },
+      "ShieldingProgramParameters": {
+        "title": "Shielding Program Parameters",
+        "type": "object",
+        "description": "The parameters for the `shieldingProgram` action.\n\nAction: Instruct people to isolate to reduce chance of catching contagion.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "vulnerablePeople": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, clinically vulnerable people will be required to shield. If not given, defaults to false."
+          },
+          "ageThreshold": {
+            "type": "integer",
+            "description": "If given, people equal or over the threshold will be required to shield. If not given, or set to `null`, then age is ignored for shielding.",
+            "format": "int32",
+            "minimum": 0,
+            "nullable": true
+          }
+        },
+        "required": ["location"]
+      },
+      "SocialDistancingMandateParameters": {
+        "title": "Social Distancing Mandate Parameters",
+        "type": "object",
+        "description": "The parameters for the `socialDistancingMadate` action.\n\nAction: Introduce social distancing rules to reduce the spread caused by proximity to others in public places. Subject to disobedience.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "distance": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The distance in terms of the lowest-level grid size."
+          }
+        },
+        "required": ["location"]
+      },
+      "StayAtHomeParameters": {
+        "title": "Stay At Home Parameters",
+        "type": "object",
+        "description": "The parameters for the `stayAtHome` action.\n\nAction: Begin a stay-at-home order for the given location that prevents people from leaving their residence except for necessary reasons (exercise/shopping/etc).",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": ["location"]
+      },
+      "TestAndIsolationParameters": {
+        "title": "Test And Isolation Parameters",
+        "type": "object",
+        "description": "The parameters for the `testAndIsolation` action.\n\nAction: Starts a test-and-isolation program in an area using the given budget that will test symptomatic people or any person who requests, and any who return positive are automatically recommended to self-isolate.",
+        "properties": {
+          "testQuality": {
+            "type": "integer",
+            "description": "The quality level of the tests used. 0 is low-quality, 1 is high-quality.",
+            "enum": [0, 1]
+          },
+          "quarantinePeriod": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The period of time a person is asked to self-isolate in day after receiving a positive result."
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The quantity of tests requested."
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "symptomaticOnly": {
+            "type": "boolean",
+            "description": "Whether to test symptomatic people only."
+          }
+        },
+        "required": [
+          "testQuality",
+          "quarantinePeriod",
+          "quantity",
+          "location",
+          "symptomaticOnly"
+        ]
       }
     },
     "securitySchemes": {},
@@ -894,19 +811,6 @@
               "description": "An array of action response object. Objects are in identical index order to the request array, and each object has the ID of the request it came from.",
               "items": {
                 "$ref": "#/components/schemas/ActionResult"
-              }
-            }
-          }
-        }
-      },
-      "Totals": {
-        "description": "An array of infection totals each, for a requested location.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/InfectionTotals"
               }
             }
           }
@@ -938,6 +842,31 @@
           }
         }
       },
+      "FailedRequest": {
+        "description": "If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "integer",
+                  "format": "int32",
+                  "minimum": 400,
+                  "exclusiveMaximum": true,
+                  "maximum": 600,
+                  "description": "The status code of the request. Will always be 4xx or 5xx, as reponse is only used in these conditions."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "A message containing extra information on what went wrong."
+                }
+              },
+              "required": ["code"]
+            }
+          }
+        }
+      },
       "SimulationStatus": {
         "description": "The current simulation status from the server.",
         "content": {
@@ -962,11 +891,7 @@
                   "description": "The total budget the WHO has for the current turn. This can only be considered valid when `isWhoTurn` is `true`."
                 }
               },
-              "required": [
-                "isWhoTurn",
-                "turnCount",
-                "budget"
-              ]
+              "required": ["isWhoTurn", "turnCount", "budget"]
             }
           }
         }
@@ -984,12 +909,7 @@
                   "properties": {
                     "unit": {
                       "type": "string",
-                      "enum": [
-                        "seconds",
-                        "minutes",
-                        "hours",
-                        "days"
-                      ],
+                      "enum": ["seconds", "minutes", "hours", "days"],
                       "description": "The unit of time to measure in."
                     },
                     "count": {
@@ -999,10 +919,7 @@
                       "description": "The amount of unit of time each turn consists of."
                     }
                   },
-                  "required": [
-                    "unit",
-                    "count"
-                  ]
+                  "required": ["unit", "count"]
                 },
                 "locations": {
                   "type": "array",
@@ -1013,36 +930,20 @@
                   }
                 }
               },
-              "required": [
-                "locations"
-              ]
+              "required": ["locations"]
             }
           }
         }
       },
-      "FailedRequest": {
-        "description": "If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.",
+      "Totals": {
+        "description": "An array of infection totals each, for a requested location.",
         "content": {
           "application/json": {
             "schema": {
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "integer",
-                  "format": "int32",
-                  "minimum": 400,
-                  "exclusiveMaximum": true,
-                  "maximum": 600,
-                  "description": "The status code of the request. Will always be 4xx or 5xx, as reponse is only used in these conditions."
-                },
-                "message": {
-                  "type": "string",
-                  "description": "A message containing extra information on what went wrong."
-                }
-              },
-              "required": [
-                "code"
-              ]
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/InfectionTotals"
+              }
             }
           }
         }
