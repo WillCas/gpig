@@ -233,6 +233,44 @@
           "description": "The action(s) you want to create or update. "
         }
       }
+    },
+    "/info/test-results": {
+      "post": {
+        "summary": "Get test results for a given location",
+        "operationId": "post-info-test-results",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TestResults"
+          },
+          "404": {
+            "$ref": "#/components/responses/FailedRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/FailedRequest"
+          }
+        },
+        "description": "Returns the test results, which are collected by the test-and-isolation action, for the given location.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              },
+              "examples": {
+                "example-1": {
+                  "value": {
+                    "locations": [
+                      [
+                        "A1"
+                      ]
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -532,6 +570,31 @@
         "required": [
           "location"
         ]
+      },
+      "EffectivenessQuality": {
+        "title": "Effectiveness Quality",
+        "type": "object",
+        "properties": {
+          "lowQuality": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Effectiveness of the low-quality item."
+          },
+          "highQuality": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Effectiveness of the high-quality item."
+          }
+        },
+        "required": [
+          "lowQuality",
+          "highQuality"
+        ],
+        "description": "Provides the effectiveness of the low- and high-quality items of a given tool."
       },
       "FailedRequest": {
         "title": "Failed Request",
@@ -834,6 +897,7 @@
       "SimulationSettings": {
         "title": "Simulation Settings",
         "type": "object",
+        "description": "The object containing the settings for the simulation.",
         "properties": {
           "turnLength": {
             "type": "object",
@@ -868,12 +932,39 @@
             "items": {
               "$ref": "#/components/schemas/LocationDefinition"
             }
+          },
+          "effectivenesses": {
+            "type": "object",
+            "required": [
+              "masks",
+              "vaccines",
+              "tests"
+            ],
+            "description": "Provides the effectivenessess of various tools the WHO can use.",
+            "properties": {
+              "masks": {
+                "$ref": "#/components/schemas/EffectivenessQuality"
+              },
+              "vaccines": {
+                "type": "array",
+                "description": "An array of effectiveness values, one for each vaccine.",
+                "items": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "format": "float"
+                }
+              },
+              "tests": {
+                "$ref": "#/components/schemas/EffectivenessQuality"
+              }
+            }
           }
         },
         "required": [
-          "locations"
-        ],
-        "description": "The object containing the settings for the simulation."
+          "locations",
+          "effectivenesses"
+        ]
       },
       "SimulationStatus": {
         "title": "Simulation Status",
@@ -975,6 +1066,33 @@
           "location",
           "symptomaticOnly"
         ]
+      },
+      "TestResults": {
+        "title": "Test Results",
+        "type": "object",
+        "description": "Provides the test results collected by the test-and-isolation action for a location.",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The total number of tests performed."
+          },
+          "positive": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The number of positive test results."
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          }
+        },
+        "required": [
+          "total",
+          "positive",
+          "location"
+        ]
       }
     },
     "securitySchemes": {},
@@ -1050,13 +1168,26 @@
         }
       },
       "Totals": {
-        "description": "An array of infection totals each, for a requested location.",
+        "description": "An array of infection totals, each for a requested location.",
         "content": {
           "application/json": {
             "schema": {
               "type": "array",
               "items": {
                 "$ref": "#/components/schemas/InfectionTotals"
+              }
+            }
+          }
+        }
+      },
+      "TestResults": {
+        "description": "An array of test results, each for a requested location.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TestResults"
               }
             }
           }
