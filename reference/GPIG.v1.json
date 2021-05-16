@@ -184,7 +184,40 @@
         "operationId": "get-status",
         "description": "Request for the current simulation status."
       },
-      "parameters": []
+      "parameters": [],
+      "post": {
+        "summary": "Update status",
+        "operationId": "post-status",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SimulationStatus"
+          },
+          "400": {
+            "$ref": "#/components/responses/FailedRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/FailedRequest"
+          }
+        },
+        "description": "The endpoint used to inform the server that the client has ended their turn.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationStatusUpdate"
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "isWhoTurn": false
+                  }
+                }
+              }
+            }
+          },
+          "description": ""
+        }
+      }
     },
     "/settings": {
       "get": {
@@ -993,6 +1026,20 @@
           "budget"
         ],
         "description": "The object containing the status of the simulation."
+      },
+      "SimulationStatusUpdate": {
+        "title": "Simulation Status Update",
+        "type": "object",
+        "description": "The body for the status update request.",
+        "properties": {
+          "isWhoTurn": {
+            "type": "boolean",
+            "description": "Required property to notify that the client has ended its turn. Has to be set to `false`, other values (and properties) are ignored, and do not perform any changes."
+          }
+        },
+        "required": [
+          "isWhoTurn"
+        ]
       },
       "SocialDistancingMandateParameters": {
         "title": "Social Distancing Mandate Parameters",
