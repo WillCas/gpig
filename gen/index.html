@@ -208,7 +208,9 @@
   <li><a href="#postInfoActorData"><code><span class="http-method">post</span> /info/actor-data</code></a></li>
   <li><a href="#postInfoActors"><code><span class="http-method">post</span> /info/actors</code></a></li>
   <li><a href="#postInfoHomes"><code><span class="http-method">post</span> /info/homes</code></a></li>
+  <li><a href="#postInfoTestResults"><code><span class="http-method">post</span> /info/test-results</code></a></li>
   <li><a href="#postInfoTotals"><code><span class="http-method">post</span> /info/totals</code></a></li>
+  <li><a href="#postStatus"><code><span class="http-method">post</span> /status</code></a></li>
   </ul>
 
   <h1><a name="Default">Default</a></h1>
@@ -236,6 +238,13 @@
     <h3 class="field-label">Example data</h3>
     <div class="example-data-content-type">Content-Type: application/json</div>
     <pre class="example"><code>{
+  "effectivenesses" : {
+    "vaccines" : [ 0.5962134, 0.5962134 ],
+    "masks" : {
+      "lowQuality" : 0.6027456,
+      "highQuality" : 0.14658129
+    }
+  },
   "turnLength" : {
     "unit" : "seconds",
     "count" : 1
@@ -583,6 +592,73 @@
         <a href="#FailedRequest">FailedRequest</a>
   </div> <!-- method -->
   <hr/>
+  <div class="method"><a name="postInfoTestResults"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /info/test-results</code></pre></div>
+    <div class="method-summary">Get test results for a given location (<span class="nickname">postInfoTestResults</span>)</div>
+    <div class="method-notes">Returns the test results, which are collected by the test-and-isolation action, for the given location.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#SearchRequest">SearchRequest</a> (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+            <div class="param-desc"><span class="param-type">example: <code>{
+  &quot;value&quot; : {
+    &quot;locations&quot; : [ [ &quot;A1&quot; ] ]
+  }
+}</code></span></div>    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#TestResults">TestResults</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "total" : 0,
+  "location" : [ "location", "location" ],
+  "positive" : 0
+}, {
+  "total" : 0,
+  "location" : [ "location", "location" ],
+  "positive" : 0
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    An array of test results, each for a requested location.
+        
+    <h4 class="field-label">404</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+    <h4 class="field-label">500</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+  </div> <!-- method -->
+  <hr/>
   <div class="method"><a name="postInfoTotals"></a>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
@@ -650,12 +726,75 @@
 
     <h3 class="field-label">Responses</h3>
     <h4 class="field-label">200</h4>
-    An array of infection totals each, for a requested location.
+    An array of infection totals, each for a requested location.
         
     <h4 class="field-label">404</h4>
     If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
         <a href="#FailedRequest">FailedRequest</a>
     <h4 class="field-label">418</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+    <h4 class="field-label">500</h4>
+    If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
+        <a href="#FailedRequest">FailedRequest</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postStatus"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /status</code></pre></div>
+    <div class="method-summary">Update status (<span class="nickname">postStatus</span>)</div>
+    <div class="method-notes">The endpoint used to inform the server that the client has ended their turn.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#SimulationStatusUpdate">SimulationStatusUpdate</a> (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+            <div class="param-desc"><span class="param-type">example: <code>{
+  &quot;value&quot; : {
+    &quot;isWhoTurn&quot; : false
+  }
+}</code></span></div>    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#SimulationStatus">SimulationStatus</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "isWhoTurn" : true,
+  "turnCount" : 0,
+  "budget" : 0
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    The current simulation status from the server.
+        <a href="#SimulationStatus">SimulationStatus</a>
+    <h4 class="field-label">400</h4>
     If a request fails for any reason, either due to poor construction or server error, then this is the response that will be given. Unless stated otherwise, all 4xx and 5xx reponse codes from any endpoint should return this response.
         <a href="#FailedRequest">FailedRequest</a>
     <h4 class="field-label">500</h4>
@@ -680,6 +819,7 @@
     <li><a href="#CloseRecreationalLocationsParameters"><code>CloseRecreationalLocationsParameters</code> - Close Recreational Locations Parameters</a></li>
     <li><a href="#CloseSchoolsParameters"><code>CloseSchoolsParameters</code> - Close Schools Parameters</a></li>
     <li><a href="#CurfewParameters"><code>CurfewParameters</code> - Curfew Parameters</a></li>
+    <li><a href="#EffectivenessQuality"><code>EffectivenessQuality</code> - Effectiveness Quality</a></li>
     <li><a href="#FailedRequest"><code>FailedRequest</code> - Failed Request</a></li>
     <li><a href="#FurloughParameters"><code>FurloughParameters</code> - Furlough Parameters</a></li>
     <li><a href="#HealthDriveParameters"><code>HealthDriveParameters</code> - Health Drive Parameters</a></li>
@@ -696,11 +836,14 @@
     <li><a href="#SearchRequest"><code>SearchRequest</code> - Search Request</a></li>
     <li><a href="#ShieldingProgramParameters"><code>ShieldingProgramParameters</code> - Shielding Program Parameters</a></li>
     <li><a href="#SimulationSettings"><code>SimulationSettings</code> - Simulation Settings</a></li>
+    <li><a href="#SimulationSettings_effectivenesses"><code>SimulationSettings_effectivenesses</code></a></li>
     <li><a href="#SimulationSettings_turnLength"><code>SimulationSettings_turnLength</code></a></li>
     <li><a href="#SimulationStatus"><code>SimulationStatus</code> - Simulation Status</a></li>
+    <li><a href="#SimulationStatusUpdate"><code>SimulationStatusUpdate</code> - Simulation Status Update</a></li>
     <li><a href="#SocialDistancingMandateParameters"><code>SocialDistancingMandateParameters</code> - Social Distancing Mandate Parameters</a></li>
     <li><a href="#StayAtHomeParameters"><code>StayAtHomeParameters</code> - Stay At Home Parameters</a></li>
     <li><a href="#TestAndIsolationParameters"><code>TestAndIsolationParameters</code> - Test And Isolation Parameters</a></li>
+    <li><a href="#TestResults"><code>TestResults</code> - Test Results</a></li>
   </ol>
 
   <div class="model">
@@ -827,6 +970,14 @@
 </div>
     <div class="field-items">
       <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="EffectivenessQuality"><code>EffectivenessQuality</code> - Effectiveness Quality</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>Provides the effectiveness of the low- and high-quality items of a given tool.</div>
+    <div class="field-items">
+      <div class="param">lowQuality </div><div class="param-desc"><span class="param-type"><a href="#float">Float</a></span> Effectiveness of the low-quality item. format: float</div>
+<div class="param">highQuality </div><div class="param-desc"><span class="param-type"><a href="#float">Float</a></span> Effectiveness of the high-quality item. format: float</div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
@@ -992,6 +1143,16 @@
     <div class="field-items">
       <div class="param">turnLength (optional)</div><div class="param-desc"><span class="param-type"><a href="#SimulationSettings_turnLength">SimulationSettings_turnLength</a></span>  </div>
 <div class="param">locations </div><div class="param-desc"><span class="param-type"><a href="#LocationDefinition">array[LocationDefinition]</a></span> An array of all top-level locations that are available on the map. </div>
+<div class="param">effectivenesses </div><div class="param-desc"><span class="param-type"><a href="#SimulationSettings_effectivenesses">SimulationSettings_effectivenesses</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SimulationSettings_effectivenesses"><code>SimulationSettings_effectivenesses</code></a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>Provides the effectivenessess of various tools the WHO can use.</div>
+    <div class="field-items">
+      <div class="param">masks </div><div class="param-desc"><span class="param-type"><a href="#EffectivenessQuality">EffectivenessQuality</a></span>  </div>
+<div class="param">vaccines </div><div class="param-desc"><span class="param-type"><a href="#float">array[Float]</a></span> An array of effectiveness values, one for each vaccine. format: float</div>
+<div class="param">tests </div><div class="param-desc"><span class="param-type"><a href="#EffectivenessQuality">EffectivenessQuality</a></span>  </div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
@@ -1011,6 +1172,13 @@
       <div class="param">isWhoTurn </div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> Whether it is currently the turn of the WHO model. </div>
 <div class="param">turnCount </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The amount of full turns (i.e. virus-&amp;gt;who) that have completed. For the first full turn, this number is set to zero, and it should be incremented by 1 upon WHO turn end. format: int32</div>
 <div class="param">budget </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The total budget the WHO has for the current turn. This can only be considered valid when <code>isWhoTurn</code> is <code>true</code>. format: int32</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SimulationStatusUpdate"><code>SimulationStatusUpdate</code> - Simulation Status Update</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>The body for the status update request.</div>
+    <div class="field-items">
+      <div class="param">isWhoTurn </div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> Required property to notify that the client has ended its turn. Has to be set to <code>false</code>, other values (and properties) are ignored, and do not perform any changes. </div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
@@ -1045,6 +1213,15 @@
 <div class="param">quantity </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The quantity of tests requested. format: int32</div>
 <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
 <div class="param">symptomaticOnly </div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> Whether to test symptomatic people only. </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="TestResults"><code>TestResults</code> - Test Results</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>Provides the test results collected by the test-and-isolation action for a location.</div>
+    <div class="field-items">
+      <div class="param">total </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The total number of tests performed. format: int32</div>
+<div class="param">positive </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The number of positive test results. format: int32</div>
+<div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
     </div>  <!-- field-items -->
   </div>
   </body>
