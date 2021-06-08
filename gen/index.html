@@ -815,6 +815,8 @@
     <li><a href="#Actor"><code>Actor</code> - Actor</a></li>
     <li><a href="#ActorIDArray"><code>ActorIDArray</code> - Actor ID Array</a></li>
     <li><a href="#ActorSearchResult"><code>ActorSearchResult</code> - Actor Search Result</a></li>
+    <li><a href="#AdministerVaccinesActors"><code>AdministerVaccinesActors</code> - Administer Vaccines Actors</a></li>
+    <li><a href="#AdministerVaccinesLocation"><code>AdministerVaccinesLocation</code> - Administer Vaccines Location</a></li>
     <li><a href="#CloseBordersParameters"><code>CloseBordersParameters</code> - Close Borders Parameters</a></li>
     <li><a href="#CloseRecreationalLocationsParameters"><code>CloseRecreationalLocationsParameters</code> - Close Recreational Locations Parameters</a></li>
     <li><a href="#CloseSchoolsParameters"><code>CloseSchoolsParameters</code> - Close Schools Parameters</a></li>
@@ -861,7 +863,7 @@
       <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The ID of the created action. This can then be used for deletion later. format: int32</div>
 <div class="param">action </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The action kind. Each kind has a specific set of parameters that it allows. </div>
         <div class="param-enum-header">Enum:</div>
-        <div class="param-enum">testAndIsolation</div><div class="param-enum">stayAtHome</div><div class="param-enum">closeSchools</div><div class="param-enum">closeRecreationalLocations</div><div class="param-enum">shieldingProgram</div><div class="param-enum">movementRestrictions</div><div class="param-enum">closeBorders</div><div class="param-enum">investInVaccine</div><div class="param-enum">furlough</div><div class="param-enum">infoPressRelease</div><div class="param-enum">loan</div><div class="param-enum">maskMandate</div><div class="param-enum">socialDistancingMandate</div><div class="param-enum">curfew</div><div class="param-enum">healthDrive</div><div class="param-enum">investInHealthServices</div>
+        <div class="param-enum">testAndIsolation</div><div class="param-enum">stayAtHome</div><div class="param-enum">closeSchools</div><div class="param-enum">closeRecreationalLocations</div><div class="param-enum">shieldingProgram</div><div class="param-enum">movementRestrictions</div><div class="param-enum">closeBorders</div><div class="param-enum">investInVaccine</div><div class="param-enum">furlough</div><div class="param-enum">infoPressRelease</div><div class="param-enum">loan</div><div class="param-enum">maskMandate</div><div class="param-enum">socialDistancingMandate</div><div class="param-enum">curfew</div><div class="param-enum">healthDrive</div><div class="param-enum">investInHealthServices</div><div class="param-enum">administerVaccinesActors</div><div class="param-enum">administerVaccinesLocation</div>
 <div class="param">mode </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> What change will be made to the action. For creation, this property always has to be &#x27;create&#x27;. </div>
         <div class="param-enum-header">Enum:</div>
         <div class="param-enum">create</div>
@@ -883,6 +885,8 @@
               <a href="#InvestInHealthServicesParameters"><code>InvestInHealthServicesParameters</code></a>&nbsp;&nbsp;&nbsp;
               <a href="#SocialDistancingMandateParameters"><code>SocialDistancingMandateParameters</code></a>&nbsp;&nbsp;&nbsp;
               <a href="#CurfewParameters"><code>CurfewParameters</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#AdministerVaccinesActors"><code>AdministerVaccinesActors</code></a>&nbsp;&nbsp;&nbsp;
+              <a href="#AdministerVaccinesLocation"><code>AdministerVaccinesLocation</code></a>&nbsp;&nbsp;&nbsp;
       </div>
     </div>  <!-- field-items -->
   </div>
@@ -934,6 +938,29 @@
     <div class="field-items">
       <div class="param">actors </div><div class="param-desc"><span class="param-type"><a href="#ActorIDArray">ActorIDArray</a></span>  </div>
 <div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="AdministerVaccinesActors"><code>AdministerVaccinesActors</code> - Administer Vaccines Actors</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>administerVaccinesActors</code> action.</p>
+<p>Offer vaccines (previously developed by Invest in Vaccine) to members of the population by specifying individuals.</p>
+</div>
+    <div class="field-items">
+      <div class="param">vaccineId </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The ID of the vaccine to administer. format: int32</div>
+<div class="param">actorIds </div><div class="param-desc"><span class="param-type"><a href="#ActorIDArray">ActorIDArray</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="AdministerVaccinesLocation"><code>AdministerVaccinesLocation</code> - Administer Vaccines Location</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'><p>The parameters for the <code>administerVaccinesLocation</code> action.</p>
+<p>Offer vaccines (previously developed by Invest in Vaccine) to members of the population by location and constraints.</p>
+</div>
+    <div class="field-items">
+      <div class="param">vaccineId </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The ID of the vaccine to administer. format: int32</div>
+<div class="param">location </div><div class="param-desc"><span class="param-type"><a href="#LocationCoords">LocationCoords</a></span>  </div>
+<div class="param">minAge (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The minimum age to offer vaccines. If null or unset, then no minimum is set. format: int32</div>
+<div class="param">maxAge (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The maximum age to offer vaccines. If null or unset, then no maximum is set. format: int32</div>
+<div class="param">vulnerableOnly (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> Whether to only offer vaccines to vulnerable people (if an age-range is given, then only the vulnerable in the range are targeted). If null or unset, then it defaults to false. </div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
