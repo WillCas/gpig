@@ -353,7 +353,9 @@
               "socialDistancingMandate",
               "curfew",
               "healthDrive",
-              "investInHealthServices"
+              "investInHealthServices",
+              "administerVaccinesActors",
+              "administerVaccinesLocation"
             ],
             "description": "The action kind. Each kind has a specific set of parameters that it allows."
           },
@@ -413,6 +415,12 @@
               },
               {
                 "$ref": "#/components/schemas/CurfewParameters"
+              },
+              {
+                "$ref": "#/components/schemas/AdministerVaccinesActors"
+              },
+              {
+                "$ref": "#/components/schemas/AdministerVaccinesLocation"
               }
             ],
             "description": "The parameters of the action. This object has to match with the corresponding action kind."
@@ -549,6 +557,62 @@
         },
         "required": [
           "actors",
+          "location"
+        ]
+      },
+      "AdministerVaccinesActors": {
+        "title": "Administer Vaccines Actors",
+        "type": "object",
+        "description": "The parameters for the `administerVaccinesActors` action.\n\nOffer vaccines (previously developed by Invest in Vaccine) to members of the population by specifying individuals.",
+        "properties": {
+          "vaccineId": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The ID of the vaccine to administer."
+          },
+          "actorIds": {
+            "$ref": "#/components/schemas/ActorIDArray"
+          }
+        },
+        "required": [
+          "vaccineId",
+          "actorIds"
+        ]
+      },
+      "AdministerVaccinesLocation": {
+        "title": "Administer Vaccines Location",
+        "type": "object",
+        "description": "The parameters for the `administerVaccinesLocation` action.\n\nOffer vaccines (previously developed by Invest in Vaccine) to members of the population by location and constraints.",
+        "properties": {
+          "vaccineId": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The ID of the vaccine to administer."
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationCoords"
+          },
+          "minAge": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The minimum age to offer vaccines. If null or unset, then no minimum is set."
+          },
+          "maxAge": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "The maximum age to offer vaccines. If null or unset, then no maximum is set."
+          },
+          "vulnerableOnly": {
+            "type": "boolean",
+            "description": "Whether to only offer vaccines to vulnerable people (if an age-range is given, then only the vulnerable in the range are targeted). If null or unset, then it defaults to false."
+          }
+        },
+        "required": [
+          "vaccineId",
           "location"
         ]
       },
